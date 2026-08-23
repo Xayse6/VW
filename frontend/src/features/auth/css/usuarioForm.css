@@ -1,0 +1,379 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --usuario-bg: #0A101E;
+  --usuario-surface: #0D1526;
+  --usuario-border: rgba(15, 139, 141, 0.18);
+  --usuario-border-strong: rgba(255, 255, 255, 0.12);
+
+  --usuario-text: #E7EAF2;
+  --usuario-text-muted: #8C95AB;
+
+  --usuario-teal: #14A3A5;
+  --usuario-teal-dark: #0E8385;
+  --usuario-teal-soft: rgba(20, 163, 165, 0.12);
+
+  --usuario-coral: #D64550;
+  --usuario-coral-soft: rgba(214, 69, 80, 0.12);
+
+  --usuario-font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --usuario-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --usuario-radius-md: 10px;
+  --usuario-radius-lg: 20px;
+  --usuario-radius-pill: 999px;
+
+  --usuario-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Container
+   ========================================================================== */
+
+.usuarios-form-container {
+  width: 100%;
+
+  flex: 1;
+
+  padding: 50px 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      rgba(10, 16, 30, 0.68),
+      rgba(10, 16, 30, 0.68)
+    ),
+    url("../assets/principal.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: var(--usuario-font-body);
+}
+
+/* ==========================================================================
+   Cabeçalho
+   ========================================================================== */
+
+.usuarios-form-header {
+  width: 100%;
+  max-width: 500px;
+
+  margin-bottom: 28px;
+
+  text-align: center;
+}
+
+.usuarios-form-header h1 {
+  margin: 0 0 12px;
+
+  font-family: var(--usuario-font-display);
+  font-size: 28px;
+  font-weight: 700;
+
+  color: var(--usuario-text);
+}
+
+.usuarios-form-header h1::after {
+  content: '';
+
+  display: block;
+
+  width: 40px;
+  height: 4px;
+
+  margin: 12px auto 0;
+
+  border-radius: var(--usuario-radius-pill);
+
+  background: linear-gradient(
+    90deg,
+    var(--usuario-teal),
+    transparent
+  );
+}
+
+.usuarios-form-header p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: var(--usuario-text-muted);
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.usuario-form-table {
+  width: 100%;
+  max-width: 500px;
+
+  padding: 34px;
+
+  background: var(--usuario-surface);
+
+  border: 1px solid var(--usuario-border);
+
+  border-radius: var(--usuario-radius-lg);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   Mensagem
+   ========================================================================== */
+
+.mensagem {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  margin-bottom: 22px;
+
+  border-radius: var(--usuario-radius-md);
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.mensagem span {
+  flex: 1;
+}
+
+.mensagem button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2px;
+
+  color: inherit;
+
+  background: transparent;
+
+  border: none;
+
+  cursor: pointer;
+
+  opacity: 0.6;
+
+  transition: opacity var(--usuario-transition);
+}
+
+.mensagem button:hover {
+  opacity: 1;
+}
+
+.mensagem.sucesso {
+  color: #5FD6D8;
+
+  background: var(--usuario-teal-soft);
+
+  border: 1px solid rgba(20, 163, 165, 0.3);
+}
+
+.mensagem.erro {
+  color: #FF8A92;
+
+  background: var(--usuario-coral-soft);
+
+  border: 1px solid rgba(214, 69, 80, 0.3);
+}
+
+/* ==========================================================================
+   Formulário
+   ========================================================================== */
+
+.UserForm-form form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.UserForm-form form > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.UserForm-form label {
+  font-size: 12.5px;
+  font-weight: 600;
+
+  color: var(--usuario-text-muted);
+}
+
+.UserForm-form input {
+  width: 100%;
+
+  padding: 13px 14px;
+
+  font-size: 14.5px;
+
+  font-family: var(--usuario-font-body);
+
+  color: var(--usuario-text);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid var(--usuario-border-strong);
+
+  border-radius: var(--usuario-radius-md);
+
+  transition:
+    border-color var(--usuario-transition),
+    box-shadow var(--usuario-transition),
+    background var(--usuario-transition);
+}
+
+.UserForm-form input::placeholder {
+  color: #545C70;
+}
+
+.UserForm-form input:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.UserForm-form input:focus {
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border-color: var(--usuario-teal);
+
+  box-shadow:
+    0 0 0 3px rgba(20, 163, 165, 0.18);
+}
+
+/* ==========================================================================
+   Botão
+   ========================================================================== */
+
+.UserForm-form button[type="submit"] {
+  width: 100%;
+
+  margin-top: 8px;
+
+  padding: 14px 20px;
+
+  color: #FFFFFF;
+
+  background: var(--usuario-teal);
+
+  font-size: 14.5px;
+  font-weight: 600;
+
+  font-family: var(--usuario-font-body);
+
+  border: none;
+
+  border-radius: var(--usuario-radius-pill);
+
+  cursor: pointer;
+
+  transition:
+    background var(--usuario-transition),
+    transform var(--usuario-transition),
+    box-shadow var(--usuario-transition);
+}
+
+.UserForm-form button[type="submit"]:hover:not(:disabled) {
+  background: var(--usuario-teal-dark);
+
+  box-shadow:
+    0 0 0 4px rgba(20, 163, 165, 0.16);
+
+  transform: translateY(-1px);
+}
+
+.UserForm-form button[type="submit"]:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.UserForm-form button[type="submit"]:disabled {
+  background: rgba(255, 255, 255, 0.08);
+
+  color: var(--usuario-text-muted);
+
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Rodapé
+   ========================================================================== */
+
+.UserForm-footer {
+  margin-top: 24px;
+
+  text-align: center;
+}
+
+.UserForm-footer p {
+  margin: 0;
+  color: var(--usuario-text-muted);
+  font-size: 13.5px;
+}
+
+.no-underline {
+  color: var(--usuario-teal);
+
+  text-decoration: none;
+
+  font-weight: 600;
+
+  transition: color var(--usuario-transition);
+}
+
+.no-underline:hover {
+  color: #4FC5C7;
+
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+
+@media (max-width: 540px) {
+  .usuarios-form-container {
+    padding: 30px 16px;
+  }
+
+  .usuario-form-table {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 460px) {
+  .usuarios-form-header h1 {
+    font-size: 24px;
+  }
+
+  .usuario-form-table {
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

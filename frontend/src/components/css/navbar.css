@@ -1,0 +1,589 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap");
+
+/* =========================================================
+   VARIÁVEIS
+   ========================================================= */
+
+:root {
+  --nav-bg: #0d1526;
+  --nav-bg-scroll: #0a101e;
+
+  --nav-border: rgba(15, 139, 141, 0.18);
+
+  --nav-text: #e7eaf2;
+  --nav-text-muted: #8c95ab;
+
+  --nav-teal: #14a3a5;
+  --nav-teal-soft: rgba(20, 163, 165, 0.12);
+
+  --nav-coral: #d64550;
+  --nav-coral-dark: #b8323c;
+
+  --nav-font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --nav-font-body:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+
+  --nav-radius: 8px;
+  --nav-radius-pill: 999px;
+
+  --nav-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  width: 100%;
+
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+
+  backdrop-filter: blur(10px);
+
+  font-family: var(--nav-font-body);
+}
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+   ========================================================= */
+
+.navbar-container {
+  max-width: 1400px;
+
+  margin: 0 auto;
+  padding: 14px 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.navbar-container-logo {
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: auto;
+  height: 34px;
+
+  display: block;
+}
+
+.logo-title {
+  position: relative;
+
+  font-family: var(--nav-font-display);
+  font-size: 19px;
+  font-weight: 700;
+
+  letter-spacing: -0.01em;
+
+  color: var(--nav-text);
+}
+
+.logo-title::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -3px;
+
+  width: 100%;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    var(--nav-teal),
+    transparent
+  );
+
+  opacity: 0.7;
+}
+
+/* =========================================================
+   ÁREA DOS SERVIÇOS
+   ========================================================= */
+
+.navbar-container-service {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-container-service-list {
+  display: flex;
+  align-items: center;
+
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+
+  gap: 4px;
+}
+
+/* =========================================================
+   GRUPO:
+   GALERIA
+   SERVIÇOS
+   CONTATO
+   ========================================================= */
+
+.navbar-container-service-list-item {
+  display: flex;
+  align-items: center;
+
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+
+  gap: 4px;
+}
+
+/* =========================================================
+   GRUPO:
+   INÍCIO
+   MEU PERFIL
+   SAIR
+   OU
+   ENTRAR
+   CADASTRAR
+   ========================================================= */
+
+.navbar-container-user-list-user {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  list-style: none;
+
+  margin: 0;
+  margin-left: 12px;
+
+  padding: 0;
+  padding-left: 12px;
+
+  gap: 4px;
+}
+
+/* =========================================================
+   DIVISOR DO MENU DE USUÁRIO
+   ========================================================= */
+
+.navbar-container-user-list-user::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 50%;
+
+  width: 1px;
+  height: 20px;
+
+  transform: translateY(-50%);
+
+  background: var(--nav-border);
+}
+
+/* =========================================================
+   LINKS DO MENU PRINCIPAL
+   ========================================================= */
+
+.item-link {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 14px;
+
+  color: var(--nav-text-muted);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: var(--nav-radius);
+
+  transition:
+    color var(--nav-transition),
+    background var(--nav-transition);
+}
+
+/* LINHA DO LINK */
+
+.item-link::after {
+  content: "";
+
+  position: absolute;
+
+  left: 14px;
+  right: 14px;
+  bottom: 3px;
+
+  height: 2px;
+
+  background: var(--nav-teal);
+
+  transform: scaleX(0);
+  transform-origin: left;
+
+  transition: transform var(--nav-transition);
+}
+
+/* HOVER */
+
+.item-link:hover {
+  color: var(--nav-text);
+  background: var(--nav-teal-soft);
+}
+
+.item-link:hover::after {
+  transform: scaleX(1);
+}
+/* FOCO */
+
+.item-link:focus-visible {
+  outline: 2px solid var(--nav-teal);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   LINKS DO USUÁRIO
+   ========================================================= */
+
+.user-link {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 14px;
+
+  color: var(--nav-text-muted);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: var(--nav-radius);
+
+  transition:
+    color var(--nav-transition),
+    background var(--nav-transition);
+}
+
+/* LINHA DO LINK */
+
+.user-link::after {
+  content: "";
+
+  position: absolute;
+
+  left: 14px;
+  right: 14px;
+  bottom: 3px;
+
+  height: 2px;
+
+  background: var(--nav-teal);
+
+  transform: scaleX(0);
+  transform-origin: left;
+
+  transition: transform var(--nav-transition);
+}
+
+/* HOVER */
+
+.user-link:hover {
+  color: var(--nav-text);
+  background: var(--nav-teal-soft);
+}
+
+.user-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* FOCO */
+
+.user-link:focus-visible {
+  outline: 2px solid var(--nav-teal);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   LINKS ENTRAR / CADASTRAR
+   ========================================================= */
+
+.nav-link {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 8px 14px;
+
+  color: var(--nav-text-muted);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  border-radius: var(--nav-radius);
+
+  transition:
+    color var(--nav-transition),
+    background var(--nav-transition);
+}
+
+/* LINHA */
+
+.nav-link::after {
+  content: "";
+
+  position: absolute;
+
+  left: 14px;
+  right: 14px;
+  bottom: 3px;
+
+  height: 2px;
+
+  background: var(--nav-teal);
+
+  transform: scaleX(0);
+  transform-origin: left;
+
+  transition: transform var(--nav-transition);
+}
+
+/* HOVER */
+
+.nav-link:hover {
+  color: var(--nav-text);
+  background: var(--nav-teal-soft);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* FOCO */
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--nav-teal);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   BOTÃO SAIR
+   ========================================================= */
+
+.user-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 14px;
+  margin: 0 1px;
+
+  color: #ffffff;
+
+  background: var(--nav-teal);
+
+  font-family: var(--nav-font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+
+  border: 1px solid var(--nav-teal);
+  border-radius: var(--nav-radius-pill);
+
+  cursor: pointer;
+
+  transition:
+    color var(--nav-transition),
+    background var(--nav-transition),
+    border-color var(--nav-transition),
+    box-shadow var(--nav-transition),
+    transform var(--nav-transition);
+}
+
+
+/* HOVER */
+
+.user-button:hover {
+  color: #ffffff;
+
+  background: #0e8385;
+  border-color: #0e8385;
+
+  box-shadow:
+    0 0 0 3px rgba(20, 163, 165, 0.18);
+
+  transform: translateY(-1px);
+}
+
+
+/* FOCO */
+
+.user-button:focus-visible {
+  outline: 2px solid var(--nav-teal);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 960px) {
+  .navbar-container {
+    padding: 12px 20px;
+    gap: 16px;
+  }
+
+  .navbar-container-service-list {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .navbar-container-service-list-item,
+  .navbar-container-user-list-user {
+    display: flex;
+    align-items: center;
+  }
+}
+
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .navbar-container {
+    padding: 12px 14px;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 12px;
+  }
+
+  .navbar-container-logo {
+    justify-content: center;
+  }
+
+  .navbar-container-service {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .navbar-container-service-list {
+    width: 100%;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 8px;
+  }
+
+  .navbar-container-service-list-item,
+  .navbar-container-user-list-user {
+    width: 100%;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 4px;
+  }
+
+  .navbar-container-user-list-user {
+    margin-left: 0;
+    margin-top: 8px;
+
+    padding-left: 0;
+    padding-top: 12px;
+  }
+
+  .navbar-container-user-list-user::before {
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 1px;
+
+    transform: none;
+  }
+
+  .item-link,
+  .user-link,
+  .nav-link {
+    width: 100%;
+
+    justify-content: center;
+
+    padding: 11px 14px;
+  }
+
+  .item-link::after,
+  .user-link::after,
+  .nav-link::after {
+    display: none;
+  }
+
+  .user-button {
+    width: 100%;
+
+    margin: 0;
+    padding: 11px 14px;
+  }
+}
+
+
+/* =========================================================
+   REDUZIR ANIMAÇÕES
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
