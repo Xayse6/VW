@@ -17,19 +17,18 @@ import {
 
 export const UserController = {
   async list(
-    _req: Request,
-    res: Response
-  ): Promise<void> {
-    const users =
-      await UserModel.findAll();
+  _req: Request,
+  res: Response
+): Promise<void> {
+  const users =
+    await UserModel.findAll();
 
-    res.status(200).json({
-      users: users.map(
-        UserModel.toPublic
-      ),
-    });
+  res.status(200).json({
+    users: users.map(
+      UserModel.toPublic
+    ),
+  });
   },
-
   async getById(
     req: Request,
     res: Response
@@ -61,39 +60,40 @@ export const UserController = {
     });
   },
 
-async promoteToAdmin(
-  req: Request,
-  res: Response
-): Promise<void> {
-  const id_usuario = req.params.id;
+  async promoteToAdmin(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const id_usuario = req.params.id;
 
-  if (typeof id_usuario !== 'string') {
-    throw new AppError(
-      'ID do usuario invalido.',
-      400
-    );
-  }
+    if (typeof id_usuario !== 'string') {
+      throw new AppError(
+        'ID do usuario invalido.',
+        400
+      );
+    }
 
-  const user =
-    await UserModel.promoteToAdmin(id_usuario);
+    const user =
+      await UserModel.promoteToAdmin(id_usuario);
 
-  if (!user) {
-    throw new AppError(
-      'Usuario nao encontrado.',
-      404
-    );
-  }
+    if (!user) {
+      throw new AppError(
+        'Usuario nao encontrado.',
+        404
+      );
+    }
 
-  res.status(200).json({
-    message:
-      'Usuario promovido para administrador.',
-    user: {
-      id_usuario: user.id_usuario,
-      nome_usuario: user.nome_usuario,
-      email_usuario: user.email_usuario,
-    },
-  });
-},
+    res.status(200).json({
+      message:
+        'Usuario promovido para administrador.',
+      user: {
+        id_usuario: user.id_usuario,
+        nome_usuario: user.nome_usuario,
+        email_usuario: user.email_usuario,
+      },
+    });
+  },
+
   async update(
     req: Request,
     res: Response

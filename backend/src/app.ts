@@ -12,6 +12,7 @@ import {
 
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import marcarRoutes from './routes/marcaRoutes';
 
 export function createApp(): Application {
   const app = express();
@@ -36,11 +37,9 @@ export function createApp(): Application {
     });
   });
 
-  // IMPORTANTE
   app.use('/api/auth', authRoutes);
-
-  // IMPORTANTE
   app.use('/api/users', userRoutes);
+  app.use('/api/marcas', marcarRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

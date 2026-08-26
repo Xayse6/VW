@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import "../css/usuarios.css";
+import "../css/marcas.css";
 
 import { api, getErrorMessage } from "../../../services/api";
 import { useAuth } from "../../hooks/useAuth";
-import type { User } from "../../../types";
 
-type FiltroRole = "todos" | "client" | "adm" | "emp";
+type Marca = {
+  id_marca: string;
+  nome_marca: string;
+  sigla_marca: string;
+};
 
-export default function Usuarios() {
+export default function Marcas() {
   const { isAuthenticated } = useAuth();
 
-  const [usuarios, setUsuarios] = useState<User[]>([]);
+  const [marcas, setMarcas] = useState<Marca[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Filtro atual
-  const [filtroRole, setFiltroRole] = useState<FiltroRole>("todos");
-
-  async function excluirUsuario(id: string) {
+  async function excluirMarca(id: string) {
     const confirmar = window.confirm(
-      "Tem certeza que deseja excluir este usuário?"
+      "Tem certeza que deseja excluir esta marca?"
     );
 
     if (!confirmar) {
@@ -31,11 +31,11 @@ export default function Usuarios() {
     try {
       setFormError(null);
 
-      await api.delete(`/users/${id}`);
+      await api.delete(`/marcas/${id}`);
 
-      setUsuarios((usuariosAtuais) =>
-        usuariosAtuais.filter(
-          (usuario) => usuario.id_usuario !== id
+      setMarcas((marcasAtuais) =>
+        marcasAtuais.filter(
+          (marca) => marca.id_marca !== id
         )
       );
     } catch (error) {
@@ -55,10 +55,12 @@ export default function Usuarios() {
         setIsLoading(true);
         setFormError(null);
 
-        const response = await api.get<{ users: User[] }>("/users");
+        const response = await api.get<{ marcas: Marca[] }>(
+          "/marcas"
+        );
 
         if (ativo) {
-          setUsuarios(response.data.users);
+          setMarcas(response.data.marcas);
         }
       } catch (error) {
         if (ativo) {
@@ -78,90 +80,28 @@ export default function Usuarios() {
     };
   }, [isAuthenticated]);
 
-  function formatarRole(role: User["role"]) {
-    switch (role) {
-      case "adm":
-        return "Administrador";
-
-      case "emp":
-        return "Funcionário";
-
-      case "client":
-        return "Cliente";
-
-      default:
-        return "Cliente";
-    }
-  }
-
-  // Filtra os usuários de acordo com o botão selecionado
-  const usuariosFiltrados = usuarios.filter((usuario) => {
-    if (filtroRole === "todos") {
-      return true;
-    }
-
-    return usuario.role === filtroRole;
-  });
-
   return (
     <main className="usuarios-container">
 
       <section className="usuarios-header">
         <div>
-          <h1>Usuários</h1>
+          <h1>Marcas</h1>
 
           <p>
-            Gerenciamento completo de usuários do sistema
+            Gerenciamento completo de marcas do sistema
           </p>
         </div>
 
         <Link
-          to="/cadastro"
+          to="/cadastrarMarca"
           className="btn-novo"
         >
-          <i className="fas fa-user-plus"></i>
-          Novo Usuário
+          <i className="fas fa-plus"></i>
+          Nova Marca
         </Link>
       </section>
 
       <section className="usuarios-card">
-
-        {/* FILTROS */}
-<div className="filtros-usuarios">
-
-  <button
-    type="button"
-    className={filtroRole === "todos" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("todos")}
-  >
-    Todos
-  </button>
-
-  <button
-    type="button"
-    className={filtroRole === "client" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("client")}
-  >
-    Clientes
-  </button>
-
-  <button
-    type="button"
-    className={filtroRole === "adm" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("adm")}
-  >
-    ADMs
-  </button>
-
-  <button
-    type="button"
-    className={filtroRole === "emp" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("emp")}
-  >
-    Funcionários
-  </button>
-
-</div>
 
         <div className="table-container">
 
@@ -172,48 +112,43 @@ export default function Usuarios() {
           )}
 
           {isLoading ? (
-            <p>Carregando usuários...</p>
+            <p>Carregando marcas...</p>
           ) : (
             <table className="usuarios-table">
 
               <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>Email</th>
-                  <th>Perfil</th>
+                  <th>Nome da Marca</th>
+                  <th>Sigla da Marca</th>
                   <th>Ações</th>
                 </tr>
               </thead>
 
               <tbody>
 
-                {usuariosFiltrados.length === 0 ? (
+                {marcas.length === 0 ? (
                   <tr>
-                    <td colSpan={4}>
-                      Nenhum usuário encontrado.
+                    <td colSpan={3}>
+                      Nenhuma marca encontrada.
                     </td>
                   </tr>
                 ) : (
-                  usuariosFiltrados.map((usuario) => (
-                    <tr key={usuario.id_usuario}>
+                  marcas.map((marca) => (
+                    <tr key={marca.id_marca}>
 
                       <td>
-                        {usuario.nome_usuario}
+                        {marca.nome_marca}
                       </td>
 
                       <td>
-                        {usuario.email_usuario}
-                      </td>
-
-                      <td>
-                        {formatarRole(usuario.role)}
+                        {marca.sigla_marca}
                       </td>
 
                       <td>
                         <div className="acoes">
 
                           <Link
-                            to={`/Usuario/Editar/${usuario.id_usuario}`}
+                            to={`/marcas/editar/${marca.id_marca}`}
                             className="btn-editar"
                           >
                             <i className="fas fa-edit"></i>
@@ -224,9 +159,7 @@ export default function Usuarios() {
                             type="button"
                             className="btn-excluir"
                             onClick={() =>
-                              excluirUsuario(
-                                usuario.id_usuario
-                              )
+                              excluirMarca(marca.id_marca)
                             }
                           >
                             <i className="fas fa-trash"></i>
