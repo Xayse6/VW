@@ -2,13 +2,13 @@ import { Route, Routes } from 'react-router-dom';
 
 
 
-import { NotFound } from './components/NotFound';
+import { NotFound } from './features/components/NotFound';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from './features/components/Navbar';
+import Footer from './features/components/Footer';
 
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { AuthProvider } from './context/AuthProvider';
+import { ProtectedRoute } from './features/components/ProtectedRoute';
+import { AuthProvider } from './features/context/AuthProvider';
 
 import Home from './features/home/pages/Home';
 
@@ -21,9 +21,10 @@ import { EditProfile } from './features/Perfil/pages/EditProfile';
 import Usuarios from "./features/usuario/pages/Usuarios";
 
 import Marcas from "./features/marca/pages/Marcas"
-import CadastrarMarca from './features/marca/pages/CadastrarMarca';
+import MarcaForm from './features/marca/pages/CadastrarMarca';
 
 import Modelos from "./features/modelo/pages/Modelos"
+import ModeloForm from "./features/modelo/pages/CadastrarModelo"
 
 
 export function App() {
@@ -45,9 +46,12 @@ export function App() {
             <Route path="/profile" element={<Profile />}/>
             <Route path="/profile/edit" element={<EditProfile />}/>
             <Route path="/marcas" element={<Marcas />}/>
-            <Route path='/cadastrarMarca' element={<CadastrarMarca/>}/>
+            <Route path='/cadastrarMarca' element={<MarcaForm/>}/>
+            <Route path='/marca/edit/:id' element={<MarcaForm/>}/>
 
             <Route path="/modelos" element={<Modelos />}/>
+            <Route path='/cadastrarModelo' element={<ModeloForm/>}/>
+            <Route path='/modelo/edit/:id' element={<ModeloForm/>}/>
           </Route>
 
           

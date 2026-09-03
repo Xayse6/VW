@@ -1,6 +1,6 @@
 
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../features/hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 
 /**
  * Protege rotas que exigem autenticacao. Enquanto a sessao esta sendo

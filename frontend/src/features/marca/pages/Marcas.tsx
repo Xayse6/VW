@@ -9,7 +9,6 @@ import { useAuth } from "../../hooks/useAuth";
 type Marca = {
   id_marca: string;
   nome_marca: string;
-  sigla_marca: string;
 };
 
 export default function Marcas() {
@@ -55,9 +54,9 @@ export default function Marcas() {
         setIsLoading(true);
         setFormError(null);
 
-        const response = await api.get<{ marcas: Marca[] }>(
-          "/marcas"
-        );
+        const response = await api.get<{
+          marcas: Marca[];
+        }>("/marcas");
 
         if (ativo) {
           setMarcas(response.data.marcas);
@@ -82,7 +81,6 @@ export default function Marcas() {
 
   return (
     <main className="usuarios-container">
-
       <section className="usuarios-header">
         <div>
           <h1>Marcas</h1>
@@ -102,7 +100,6 @@ export default function Marcas() {
       </section>
 
       <section className="usuarios-card">
-
         <div className="table-container">
 
           {formError && (
@@ -119,16 +116,14 @@ export default function Marcas() {
               <thead>
                 <tr>
                   <th>Nome da Marca</th>
-                  <th>Sigla da Marca</th>
                   <th>Ações</th>
                 </tr>
               </thead>
 
               <tbody>
-
                 {marcas.length === 0 ? (
                   <tr>
-                    <td colSpan={3}>
+                    <td colSpan={2}>
                       Nenhuma marca encontrada.
                     </td>
                   </tr>
@@ -141,14 +136,10 @@ export default function Marcas() {
                       </td>
 
                       <td>
-                        {marca.sigla_marca}
-                      </td>
-
-                      <td>
                         <div className="acoes">
 
                           <Link
-                            to={`/marcas/editar/${marca.id_marca}`}
+                            to={`/marca/edit/${marca.id_marca}`}
                             className="btn-editar"
                           >
                             <i className="fas fa-edit"></i>
@@ -159,7 +150,9 @@ export default function Marcas() {
                             type="button"
                             className="btn-excluir"
                             onClick={() =>
-                              excluirMarca(marca.id_marca)
+                              excluirMarca(
+                                marca.id_marca
+                              )
                             }
                           >
                             <i className="fas fa-trash"></i>
@@ -172,16 +165,13 @@ export default function Marcas() {
                     </tr>
                   ))
                 )}
-
               </tbody>
 
             </table>
           )}
 
         </div>
-
       </section>
-
     </main>
   );
 }

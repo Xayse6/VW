@@ -1,104 +1,83 @@
-import "../css/marca.css";
-
-import {Link} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import "../css/marcas.css";
+import { useMarcaHooks } from "../hook/marca";
 
 export default function MarcaForm() {
-    return (
-        <main className="usuarios-form-container">
+  const { id } = useParams(); // pega o id da URL (se existir)
+  const isEdit = Boolean(id);
 
-            <div className="usuarios-form-header">
-                <h1>Cadastrar Marca</h1>
-                <p>Preencha os dados abaixo para cadastrar uma nova marca.</p>
-            </div>
-            <div className="usuario-form-table">
-                <div className="UserForm-form">
-                    <form>
-                        <div>
+  const {
+    nomeMarca,
+    setNomeMarca,
+    carregando,
+    erro,
+    sucesso,
+    handleSubmit,
+  } = useMarcaHooks(id); // passa o id para o hook
 
-                            <label htmlFor="nome_Marca">
-                                Nome da Marca
-                            </label>
+  return (
+    <>
+      {/* TOAST */}
+      {sucesso && (
+        <div className="toast toast-sucesso">
+          {sucesso}
+        </div>
+      )}
 
-                            <input
-                                type="text"
-                                id="nome_Marca"
-                                name="nome_Marca"
-                                placeholder="Digite o nome da marca"
-                                value={nome_Marca}
-                                onChange={(event) =>
-                                    setNome_Marca(
-                                        event.target.value
-                                    )
-                                }
-                                maxLength={100}
-                                required
-                            />
+      {erro && (
+        <div className="toast toast-erro">
+          {erro}
+        </div>
+      )}
 
-                        </div>
+      <main className="usuarios-form-container">
+        <div className="usuarios-form-header">
+          <h1>{isEdit ? "Alterar Marca" : "Cadastrar Marca"}</h1>
+          <p>
+            {isEdit
+              ? "Altere os dados da marca abaixo."
+              : "Preencha os dados abaixo para cadastrar uma nova marca."}
+          </p>
+        </div>
 
-                        {/* Sigla */}
+        <div className="usuario-form-table">
+          <div className="UserForm-form">
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="nome_marca">Nome da Marca</label>
+                <input
+                  type="text"
+                  id="nome_marca"
+                  name="nome_marca"
+                  placeholder="Digite o nome da marca"
+                  value={nomeMarca}
+                  onChange={(e) => setNomeMarca(e.target.value)}
+                  maxLength={100}
+                  required
+                />
+              </div>
 
-                        <div>
+              <button type="submit" disabled={carregando}>
+                {carregando
+                  ? isEdit
+                    ? "Salvando..."
+                    : "Cadastrando..."
+                  : isEdit
+                  ? "Salvar Alterações"
+                  : "Cadastrar Marca"}
+              </button>
+            </form>
+          </div>
 
-                            <label htmlFor="sigla_Marca">
-                                Sigla da Marca
-                            </label>
-
-                            <input
-                                type="text"
-                                id="sigla_Marca"
-                                name="sigla_Marca"
-                                placeholder="Digite a sigla da marca"
-                                value={sigla_Marca}
-                                onChange={(event) =>
-                                    setSigla_Marca(
-                                        event.target.value.toUpperCase()
-                                    )
-                                }
-                                maxLength={5}
-                                required
-                            />
-
-                        </div>
-
-                        {/* Botão */}
-
-                        <button
-                            type="submit"
-                            disabled={carregando}
-                        >
-                            {carregando
-                                ? modoEdicao
-                                    ? "Salvando..."
-                                    : "Cadastrando..."
-                                : modoEdicao
-                                    ? "Salvar Alterações"
-                                    : "Cadastrar Marca"}
-                        </button>
-
-                    </form>
-
-                </div>
-
-                {/* Rodapé */}
-
-                <div className="UserForm-footer">
-
-                    <p>
-
-                        <Link
-                            className="no-underline"
-                            to="/marcas"
-                        >
-                            Voltar para marcas
-                        </Link>
-
-                    </p>
-
-                </div>
-
-            </div>
-
-        </main>
-    );
+          <div className="UserForm-footer">
+            <p>
+              <Link className="no-underline" to="/marcas">
+                Voltar para marcas
+              </Link>
+            </p>
+          </div>
+        </div>
+      </main>
+    </>
+  );
 }

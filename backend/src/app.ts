@@ -10,9 +10,12 @@ import {
   notFoundHandler,
 } from './middleware/errorHandler';
 
-import authRoutes from './routes/authRoutes';
+
 import userRoutes from './routes/userRoutes';
-import marcarRoutes from './routes/marcaRoutes';
+import authRoutes from './routes/authRoutes';
+import marcaRoutes from './routes/marcaRoutes';
+
+import modeloRoutes from './routes/modeloRoutes';
 
 export function createApp(): Application {
   const app = express();
@@ -39,7 +42,10 @@ export function createApp(): Application {
 
   app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
-  app.use('/api/marcas', marcarRoutes);
+
+  app.use('/api/marcas', marcaRoutes);
+
+  app.use('/api/modelos', modeloRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

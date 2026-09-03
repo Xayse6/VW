@@ -6,6 +6,8 @@ import { requireAuth } from '../middleware/auth';
 
 const router = Router();
 
+
+
 router.get(
   '/',
   requireAuth,

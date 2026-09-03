@@ -6,18 +6,18 @@ import {
   type ReactNode,
 } from 'react';
 
-import { authService } from '../features/auth/service/authService';
+import { authService } from '../../features/auth/service/authService';
 import {
   clearStoredToken,
   getStoredToken,
   setStoredToken,
-} from '../services/api';
+} from '../../services/api';
 
 import type {
   LoginPayload,
   RegisterPayload,
   User,
-} from '../types';
+} from '../../types';
 
 import { AuthContext } from './AuthContext';
 

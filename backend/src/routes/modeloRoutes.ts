@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { MarcaController } from '../controllers/marcaController';
+import { ModeloController } from '../controllers/modeloController';
 import { asyncHandler } from '../middleware/errorHandler';
 import { requireAuth } from '../middleware/auth';
 
@@ -8,25 +8,27 @@ const router = Router();
 
 router.get(
   '/',
-  asyncHandler(MarcaController.list)
+  asyncHandler(ModeloController.list)
 );
 
 router.post(
-  '/cadastroMarca',
-  asyncHandler(MarcaController.register)
+  '/cadastroModelo',
+  requireAuth,
+  asyncHandler(ModeloController.register)
 );
 
 router.get(
   "/:id",
+  requireAuth,
   asyncHandler(
-    MarcaController.getById
+    ModeloController.getById
   )
 );
 
 router.put(
   "/:id",
   requireAuth,
-  asyncHandler(MarcaController.update)
+  asyncHandler(ModeloController.update)
 );
 
 

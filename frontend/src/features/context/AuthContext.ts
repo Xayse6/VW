@@ -4,7 +4,7 @@ import type {
   LoginPayload,
   RegisterPayload,
   User,
-} from '../types';
+} from '../../types';
 
 export interface AuthContextValue {
   user: User | null;

@@ -3,7 +3,7 @@ import type {
   Response,
 } from 'express';
 
-import { UserModel } from '../models/UserModel';
+import { UserModel } from '../model/User';
 import { AppError } from '../utils/AppError';
 
 import {

@@ -3,7 +3,7 @@ import { pool } from '../db/database';
 import type {
   PublicUser,
   UserRecord,
-} from '../types';
+} from '../types/users';
 
 export const UserModel = {
   async create(params: {
@@ -269,21 +269,21 @@ async promoteToAdmin(
     return (result.rowCount ?? 0) > 0;
   },
 
-toPublic(
-  user: UserRecord
-): PublicUser {
-  return {
-    id_usuario: user.id_usuario,
-    nome_usuario: user.nome_usuario,
-    email_usuario: user.email_usuario,
+  toPublic(
+    user: UserRecord
+  ): PublicUser {
+    return {
+      id_usuario: user.id_usuario,
+      nome_usuario: user.nome_usuario,
+      email_usuario: user.email_usuario,
 
-    role: user.nome_role,
+      role: user.nome_role,
 
-    created_at_usuario:
-      user.created_at_usuario.toISOString(),
+      created_at_usuario:
+        user.created_at_usuario.toISOString(),
 
-    updated_at_usuario:
-      user.updated_at_usuario.toISOString(),
-  };
-},
+      updated_at_usuario:
+        user.updated_at_usuario.toISOString(),
+    };
+  },
 };

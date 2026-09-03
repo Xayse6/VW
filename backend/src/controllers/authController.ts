@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-import { UserModel } from '../models/UserModel';
+import { UserModel } from '../model/User';
 import { AppError } from '../utils/AppError';
 
 import {
@@ -154,41 +154,15 @@ export const AuthController = {
       },
     });
   },
-  async all(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    const userId = req.user?.sub;
+async all(
+  _req: Request,
+  res: Response
+): Promise<void> {
+  const users = await UserModel.findAll();
 
-    if (!userId) {
-      throw new AppError(
-        'Usuario nao autenticado.',
-        401
-      );
-    }
+  console.log(users);
 
-    const user =
-      await UserModel.findById(userId);
-
-    if (!user) {
-      throw new AppError(
-        'Usuario nao encontrado.',
-        404
-      );
-    }
-
-    res.status(200).json({
-      user: {
-        id_usuario: user.id_usuario,
-        nome_usuario: user.nome_usuario,
-        email_usuario: user.email_usuario,
-        role: user.nome_role ?? 'client',
-        created_at_usuario:
-          user.created_at_usuario,
-        updated_at_usuario:
-          user.updated_at_usuario,
-      },
-    });
-  },
+  res.status(200).json({ users });
+},
   
 };

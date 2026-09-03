@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import type { SignOptions } from 'jsonwebtoken';
 
 import { env } from '../config/env';
-import type { JwtPayload } from '../types';
+import type { JwtPayload } from '../types/users';
 
 /**
  * Assina um token JWT contendo os dados mínimos

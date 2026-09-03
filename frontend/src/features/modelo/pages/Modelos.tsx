@@ -6,22 +6,24 @@ import "../css/modelos.css";
 import { api, getErrorMessage } from "../../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 
-type Marca = {
+type Modelo = {
+  id_modelo: string;
   id_marca: string;
   nome_marca: string;
-  sigla_marca: string;
+  nome_modelo: string;
+  ano_modelo: number;
 };
 
-export default function Marcas() {
+export default function Modelos() {
   const { isAuthenticated } = useAuth();
 
-  const [marcas, setMarcas] = useState<Marca[]>([]);
+  const [modelos, setModelos] = useState<Modelo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
 
-  async function excluirMarca(id: string) {
+  async function excluirModelo(id: string) {
     const confirmar = window.confirm(
-      "Tem certeza que deseja excluir esta marca?"
+      "Tem certeza que deseja excluir este modelo?"
     );
 
     if (!confirmar) {
@@ -31,11 +33,11 @@ export default function Marcas() {
     try {
       setFormError(null);
 
-      await api.delete(`/marcas/${id}`);
+      await api.delete(`/modelos/${id}`);
 
-      setMarcas((marcasAtuais) =>
-        marcasAtuais.filter(
-          (marca) => marca.id_marca !== id
+      setModelos((modelosAtuais) =>
+        modelosAtuais.filter(
+          (modelo) => modelo.id_modelo !== id
         )
       );
     } catch (error) {
@@ -55,12 +57,12 @@ export default function Marcas() {
         setIsLoading(true);
         setFormError(null);
 
-        const response = await api.get<{ marcas: Marca[] }>(
-          "/marcas"
-        );
+        const response = await api.get<{
+          modelos: Modelo[];
+        }>("/modelos");
 
         if (ativo) {
-          setMarcas(response.data.marcas);
+          setModelos(response.data.modelos);
         }
       } catch (error) {
         if (ativo) {
@@ -82,27 +84,25 @@ export default function Marcas() {
 
   return (
     <main className="usuarios-container">
-
       <section className="usuarios-header">
         <div>
-          <h1>Marcas</h1>
+          <h1>Modelos</h1>
 
           <p>
-            Gerenciamento completo de marcas do sistema
+            Gerenciamento completo de modelos do sistema
           </p>
         </div>
 
         <Link
-          to="/marcas/cadastro"
+          to="/cadastrarModelo"
           className="btn-novo"
         >
           <i className="fas fa-plus"></i>
-          Nova Marca
+          Novo Modelo
         </Link>
       </section>
 
       <section className="usuarios-card">
-
         <div className="table-container">
 
           {formError && (
@@ -112,43 +112,42 @@ export default function Marcas() {
           )}
 
           {isLoading ? (
-            <p>Carregando marcas...</p>
+            <p>Carregando modelos...</p>
           ) : (
             <table className="usuarios-table">
 
               <thead>
                 <tr>
-                  <th>Nome da Marca</th>
-                  <th>Sigla da Marca</th>
+                  <th>Marca</th>
+                  <th>Modelo</th>
+                  <th>Ano</th>
                   <th>Ações</th>
                 </tr>
               </thead>
 
               <tbody>
 
-                {marcas.length === 0 ? (
+                {modelos.length === 0 ? (
                   <tr>
-                    <td colSpan={3}>
-                      Nenhuma marca encontrada.
+                    <td colSpan={4}>
+                      Nenhum modelo encontrado.
                     </td>
                   </tr>
                 ) : (
-                  marcas.map((marca) => (
-                    <tr key={marca.id_marca}>
+                  modelos.map((modelo) => (
+                    <tr key={modelo.id_modelo}>
 
-                      <td>
-                        {marca.nome_marca}
-                      </td>
+                      <td>{modelo.nome_marca}</td>
 
-                      <td>
-                        {marca.sigla_marca}
-                      </td>
+                      <td>{modelo.nome_modelo}</td>
+
+                      <td>{modelo.ano_modelo}</td>
 
                       <td>
                         <div className="acoes">
 
                           <Link
-                            to={`/marcas/editar/${marca.id_marca}`}
+                            to={`/modelo/edit/${modelo.id_modelo}`}
                             className="btn-editar"
                           >
                             <i className="fas fa-edit"></i>
@@ -159,7 +158,9 @@ export default function Marcas() {
                             type="button"
                             className="btn-excluir"
                             onClick={() =>
-                              excluirMarca(marca.id_marca)
+                              excluirModelo(
+                                modelo.id_modelo
+                              )
                             }
                           >
                             <i className="fas fa-trash"></i>
@@ -179,9 +180,7 @@ export default function Marcas() {
           )}
 
         </div>
-
       </section>
-
     </main>
   );
 }
