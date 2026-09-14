@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "../css/marcas.css";
 
 import { api, getErrorMessage } from "../../../services/api";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 type Marca = {
   id_marca: string;

@@ -17,6 +17,7 @@ body {
 }
 
 * {
+    box-sizing: border-box;
     font-family: inherit;
 }
 
@@ -32,7 +33,21 @@ body {
 
     display: flex;
     justify-content: center;
+}
 
-    /* border-top: 1px solid #d0d0d0;
-    border-bottom: 1px solid #d0d0d0; */
+/* ==========================================================================
+   Alertas
+   ========================================================================== */
+
+[role="alert"] {
+    color: #FFFFFF;
+}
+
+[role="alert"] p,
+[role="alert"] span {
+    color: #FFFFFF;
+}
+
+[role="alert"] strong {
+    color: #FFFFFF;
 }

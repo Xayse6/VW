@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "../css/modelos.css";
 
 import { api, getErrorMessage } from "../../../services/api";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 type Modelo = {
   id_modelo: string;

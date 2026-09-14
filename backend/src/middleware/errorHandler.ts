@@ -10,9 +10,6 @@ import { ZodError } from 'zod';
 import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
 
-/**
- * Handler global de erros.
- */
 export function errorHandler(
   err: unknown,
   _req: Request,
@@ -37,7 +34,6 @@ export function errorHandler(
     res.status(err.statusCode).json({
       error: err.message,
     });
-
     return;
   }
 

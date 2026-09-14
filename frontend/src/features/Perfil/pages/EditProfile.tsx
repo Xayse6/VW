@@ -6,7 +6,7 @@ import { Button } from '../../components/Button';
 import { FormInput } from '../../components/FormInput';
 
 import { getErrorMessage } from '../../../services/api';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../auth/hooks/useAuth';
 import { userService } from '../../../services/userService';
 
 import {

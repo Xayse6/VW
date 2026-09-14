@@ -1,78 +1,40 @@
 import "../css/usuarioLogin.css";
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
-import { Alert } from '../../components/Alert';
-import { Button } from '../../components/Button';
-import { FormInput } from '../../components/FormInput';
-import { getErrorMessage } from '../../../services/api';
-import { useAuth } from '../../hooks/useAuth';
+import { Alert } from "../../components/Alert";
+import { Button } from "../../components/Button";
+import { FormInput } from "../../components/FormInput";
 
-import {
-  type FieldErrors,
-  hasErrors,
-  validateLoginForm,
-} from '../../../utils/validation';
+import { useLogin } from "../hooks/useLogin";
 
 export default function Login() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [fieldErrors, setFieldErrors] =
-    useState<FieldErrors>({});
-
-  const [formError, setFormError] =
-    useState<string | null>(null);
-
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
+  const {
+    submit,
+    fieldErrors,
+    formError,
+    isSubmitting,
+  } = useLogin();
 
   async function handleSubmit(
-    event: React.FormEvent
+    event: FormEvent
   ): Promise<void> {
     event.preventDefault();
-
-    setFormError(null);
-
-    const errors = validateLoginForm({
-      email,
-      password,
-    });
-
-    setFieldErrors(errors);
-
-    if (hasErrors(errors)) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await login({
-        email_usuario: email.trim(),
-        password,
-      });
-
-      navigate('/');
-    } catch (error) {
-      setFormError(getErrorMessage(error));
-    } finally {
-      setIsSubmitting(false);
-    }
+    await submit(email, password);
   }
 
   return (
-    <div className="login-form-container">
-      <div className="login-form-header">
+    <div className="container-login">
+      <div className="cabecalho-login">
         <h1>Login</h1>
         <p>Entre na plataforma Velox Wrap</p>
       </div>
 
-      <div className="login-form-table">
+      <div className="cartao-login">
 
         {formError && (
           <Alert
@@ -81,7 +43,7 @@ export default function Login() {
           />
         )}
 
-        <div className="login-form">
+        <div className="formulario-login">
 
           <form onSubmit={handleSubmit} noValidate>
 
@@ -122,17 +84,17 @@ export default function Login() {
 
           </form>
         </div>
+
         <div>
-          <p className="auth-switch">
-            Não tem uma conta?{' '}
+          <p className="alternar-autenticacao">
+            Não tem uma conta?{" "}
             <Link to="/register">
               Cadastre-se
             </Link>
           </p>
-
         </div>
-      </div>
 
+      </div>
     </div>
   );
 }
