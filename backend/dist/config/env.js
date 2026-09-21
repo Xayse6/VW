@@ -14,6 +14,9 @@ exports.env = {
     port: Number(process.env.PORT) || 3333,
     host: process.env.HOST || '0.0.0.0',
     nodeEnv: process.env.NODE_ENV || 'development',
+    seedDatabase: process.env.SEED_DATABASE
+        ? process.env.SEED_DATABASE === 'true'
+        : process.env.NODE_ENV !== 'production',
     databaseUrl: requiredEnv('DATABASE_URL'),
     jwtSecret: requiredEnv('JWT_SECRET'),
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET || requiredEnv('JWT_SECRET'),

@@ -112,6 +112,9 @@ async function syncDatabase() {
     CREATE UNIQUE INDEX IF NOT EXISTS unique_marcas_nome_marca
       ON marcas (nome_marca);
 
+    DO $seed$
+    BEGIN
+      IF ${env_1.env.seedDatabase ? 'true' : 'false'} THEN
     INSERT INTO roles (nome_role)
     SELECT 'adm' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE nome_role = 'adm');
 
@@ -210,6 +213,10 @@ async function syncDatabase() {
       AND NOT EXISTS (
         SELECT 1 FROM modelos WHERE nome_modelo = 'Yaris' AND ano_modelo = 2024
       );
+
+      END IF;
+    END
+    $seed$;
   `);
     console.log('Banco sincronizado com sucesso.');
 }
