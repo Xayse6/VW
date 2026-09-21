@@ -1,23 +1,33 @@
 import axios from 'axios';
 import type { AxiosError, AxiosInstance } from 'axios';
+
+import { APP_ERROR_MESSAGES } from '../messages/errors';
 import type { ApiErrorResponse } from '../types';
 
 const API_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 
-/**
- * Instancia centralizada do Axios. Toda a comunicacao HTTP com o backend
- * passa por aqui, o que facilita adicionar interceptors, headers padrao
- * e tratamento de erros de forma consistente.
- */
 export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 const TOKEN_STORAGE_KEY = 'um_auth_token';
+
+export function shouldAttemptTokenRefresh(
+  url: string | undefined,
+  status: number | undefined
+): boolean {
+  return Boolean(
+    status === 401 &&
+    url &&
+    !url.startsWith('/auth/') &&
+    getStoredToken()
+  );
+}
 
 export function getStoredToken(): string | null {
   return localStorage.getItem(TOKEN_STORAGE_KEY);
@@ -31,7 +41,6 @@ export function clearStoredToken(): void {
   localStorage.removeItem(TOKEN_STORAGE_KEY);
 }
 
-// Anexa o token JWT (se existir) em todas as requisicoes automaticamente
 api.interceptors.request.use((config) => {
   const token = getStoredToken();
 
@@ -42,16 +51,47 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/**
- * Extrai uma mensagem de erro amigavel a partir de um erro do Axios,
- * cobrindo falhas de validacao, erros da API e falhas de rede.
- */
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config as typeof error.config & { __isRetry?: boolean };
+
+    if (
+      shouldAttemptTokenRefresh(originalRequest?.url, error.response?.status) &&
+      !originalRequest.__isRetry
+    ) {
+      originalRequest.__isRetry = true;
+
+      try {
+        const { data } = await api.post('/auth/refresh');
+        const nextToken = data?.token;
+
+        if (nextToken) {
+          setStoredToken(nextToken);
+          originalRequest.headers.Authorization = `Bearer ${nextToken}`;
+          return api(originalRequest);
+        }
+
+        clearStoredToken();
+        window.location.href = '/login';
+        return Promise.reject(error);
+      } catch {
+        clearStoredToken();
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError<ApiErrorResponse>;
 
     if (!axiosError.response) {
-      return 'Nao foi possivel se conectar ao servidor. Verifique sua conexao e tente novamente.';
+      return APP_ERROR_MESSAGES.SERVER_UNAVAILABLE;
     }
 
     const data = axiosError.response.data;
@@ -64,12 +104,16 @@ export function getErrorMessage(error: unknown): string {
       return data.error;
     }
 
-    return 'Ocorreu um erro inesperado. Tente novamente.';
+    if (data?.message) {
+      return data.message;
+    }
+
+    return APP_ERROR_MESSAGES.UNEXPECTED;
   }
 
   if (error instanceof Error) {
     return error.message;
   }
 
-  return 'Ocorreu um erro inesperado. Tente novamente.';
+  return APP_ERROR_MESSAGES.UNEXPECTED;
 }

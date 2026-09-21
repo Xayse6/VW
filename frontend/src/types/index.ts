@@ -37,6 +37,7 @@ export interface ApiErrorDetail {
 }
 
 export interface ApiErrorResponse {
-  error: string;
+  error?: string;
+  message?: string;
   details?: ApiErrorDetail[];
 }

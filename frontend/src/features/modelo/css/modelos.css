@@ -1,55 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
 
 :root {
   --color-bg: #0A101E;
   --color-surface: #0D1526;
   --color-surface-light: #111C31;
   --color-surface-hover: #13243A;
-
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-strong: rgba(255, 255, 255, 0.14);
-
   --color-text-primary: #E7EAF2;
   --color-text-secondary: #9AA4B8;
-
+  --color-text-muted: #69758B;
   --color-teal: #14A3A5;
   --color-teal-dark: #0E8385;
-
+  --color-teal-soft: rgba(20, 163, 165, 0.12);
   --color-coral: #D64550;
   --color-coral-dark: #B8323C;
-
+  --color-coral-soft: rgba(214, 69, 80, 0.12);
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-pill: 999px;
-
   --font-display: 'Space Grotesk', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 }
 
 * {
   box-sizing: border-box;
 }
 
-.usuarios-form-container {
+.usuarios-form-container,
+.marcas-form-container,
+.modelos-form-container {
   min-height: 100vh;
   padding: 40px 20px;
   background:
-    linear-gradient(
-      rgba(10, 16, 30, 0.75),
-      rgba(10, 16, 30, 0.75)
-    ),
+    linear-gradient(rgba(10, 16, 30, 0.75), rgba(10, 16, 30, 0.75)),
     url("../../../assets/principal.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.usuarios-form-header {
+.usuarios-form-header,
+.marcas-form-header,
+.modelos-form-header {
   max-width: 700px;
   margin: 0 auto 24px;
   text-align: center;
 }
 
-.usuarios-form-header h1 {
+.usuarios-form-header h1,
+.marcas-form-header h1,
+.modelos-form-header h1 {
   margin: 0 0 10px;
   color: var(--color-text-primary);
   font-family: var(--font-display);
@@ -57,12 +59,16 @@
   font-weight: 700;
 }
 
-.usuarios-form-header p {
+.usuarios-form-header p,
+.marcas-form-header p,
+.modelos-form-header p {
   color: var(--color-text-secondary);
   font-size: 14px;
 }
 
-.usuario-form-table {
+.usuario-form-table,
+.marca-form-table,
+.modelo-form-table {
   max-width: 700px;
   margin: 0 auto;
   background: rgba(13, 21, 38, 0.96);
@@ -109,7 +115,6 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%239AA4B8' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5 8 12l6.5-6.5' stroke='%239AA4B8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
@@ -172,19 +177,11 @@
 }
 
 .toast-sucesso {
-  background: linear-gradient(
-    135deg,
-    var(--color-teal-dark),
-    var(--color-teal)
-  );
+  background: linear-gradient(135deg, var(--color-teal-dark), var(--color-teal));
 }
 
 .toast-erro {
-  background: linear-gradient(
-    135deg,
-    var(--color-coral-dark),
-    var(--color-coral)
-  );
+  background: linear-gradient(135deg, var(--color-coral-dark), var(--color-coral));
 }
 
 @keyframes fadeIn {
@@ -200,15 +197,21 @@
 }
 
 @media (max-width: 768px) {
-  .usuarios-form-container {
+  .usuarios-form-container,
+  .marcas-form-container,
+  .modelos-form-container {
     padding: 20px 12px;
   }
 
-  .usuario-form-table {
+  .usuario-form-table,
+  .marca-form-table,
+  .modelo-form-table {
     padding: 20px;
   }
 
-  .usuarios-form-header h1 {
+  .usuarios-form-header h1,
+  .marcas-form-header h1,
+  .modelos-form-header h1 {
     font-size: 26px;
   }
 

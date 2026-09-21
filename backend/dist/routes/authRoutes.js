@@ -7,5 +7,7 @@ const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
 router.post('/register', (0, errorHandler_1.asyncHandler)(authController_1.AuthController.register));
 router.post('/login', (0, errorHandler_1.asyncHandler)(authController_1.AuthController.login));
+router.post('/refresh', (0, errorHandler_1.asyncHandler)(authController_1.AuthController.refresh));
+router.post('/logout', (0, errorHandler_1.asyncHandler)(authController_1.AuthController.logout));
 router.get('/me', auth_1.requireAuth, (0, errorHandler_1.asyncHandler)(authController_1.AuthController.me));
 exports.default = router;

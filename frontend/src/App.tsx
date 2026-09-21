@@ -47,14 +47,19 @@ export function App() {
           </Route>
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/usuarios" element={<Usuarios />}/>
             <Route path="/profile" element={<Profile />}/>
             <Route path="/profile/edit" element={<EditProfile />}/>
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={['adm', 'client', 'emp']} />}>
+            <Route path="/modelos" element={<Modelos />}/>
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={['adm']} />}>
+            <Route path="/usuarios" element={<Usuarios />}/>
             <Route path="/marcas" element={<Marcas />}/>
             <Route path='/cadastrarMarca' element={<MarcaForm/>}/>
             <Route path='/marca/edit/:id' element={<MarcaForm/>}/>
-
-            <Route path="/modelos" element={<Modelos />}/>
             <Route path='/cadastrarModelo' element={<ModeloForm/>}/>
             <Route path='/modelo/edit/:id' element={<ModeloForm/>}/>
           </Route>

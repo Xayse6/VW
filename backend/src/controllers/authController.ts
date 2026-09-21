@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 
+import { env } from '../config/env';
 import { AUTH_ERRORS } from '../messages/auth';
 import { SUCCESS_MESSAGES } from '../messages/success';
 import { UserModel } from '../model/User';
@@ -10,12 +11,22 @@ import {
   hashPassword,
 } from '../utils/password';
 
-import { signToken } from '../utils/jwt';
+import { signAccessToken, signRefreshToken, verifyToken } from '../utils/jwt';
 
 import {
   loginSchema,
   registerSchema,
 } from '../utils/validation';
+
+function setAuthCookies(res: Response, refreshToken: string): void {
+  res.cookie('refresh_token', refreshToken, {
+    httpOnly: true,
+    sameSite: env.nodeEnv === 'production' ? 'none' : 'lax',
+    secure: env.nodeEnv === 'production',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+}
 
 export const AuthController = {
   async register(
@@ -45,11 +56,19 @@ export const AuthController = {
       password_hash,
     });
 
-    const token = signToken({
+    const token = signAccessToken({
       sub: user.id_usuario,
       email: user.email_usuario,
       role: user.nome_role ?? 'client',
     });
+
+    const refreshToken = signRefreshToken({
+      sub: user.id_usuario,
+      email: user.email_usuario,
+      role: user.nome_role ?? 'client',
+    });
+
+    setAuthCookies(res, refreshToken);
 
     res.status(201).json({
       message: SUCCESS_MESSAGES.USER_REGISTERED,
@@ -98,11 +117,19 @@ export const AuthController = {
       );
     }
 
-    const token = signToken({
+    const token = signAccessToken({
       sub: user.id_usuario,
       email: user.email_usuario,
       role: user.nome_role ?? 'client',
     });
+
+    const refreshToken = signRefreshToken({
+      sub: user.id_usuario,
+      email: user.email_usuario,
+      role: user.nome_role ?? 'client',
+    });
+
+    setAuthCookies(res, refreshToken);
 
     res.status(200).json({
       message: SUCCESS_MESSAGES.USER_LOGIN,
@@ -118,6 +145,53 @@ export const AuthController = {
       },
       token,
     });
+  },
+
+  async refresh(req: Request, res: Response): Promise<void> {
+    const refreshToken = req.cookies?.refresh_token;
+
+    if (!refreshToken) {
+      throw new AppError(AUTH_ERRORS.INVALID_SESSION, 401);
+    }
+
+    const payload = verifyToken(refreshToken, 'refresh');
+    const user = await UserModel.findById(payload.sub);
+
+    if (!user) {
+      throw new AppError(AUTH_ERRORS.USER_NOT_AUTHENTICATED, 401);
+    }
+
+    const newAccessToken = signAccessToken({
+      sub: user.id_usuario,
+      email: user.email_usuario,
+      role: user.nome_role ?? 'client',
+    });
+
+    const nextRefreshToken = signRefreshToken({
+      sub: user.id_usuario,
+      email: user.email_usuario,
+      role: user.nome_role ?? 'client',
+    });
+
+    setAuthCookies(res, nextRefreshToken);
+
+    res.status(200).json({
+      message: 'Sessão renovada com sucesso.',
+      token: newAccessToken,
+      user: {
+        id_usuario: user.id_usuario,
+        nome_usuario: user.nome_usuario,
+        email_usuario: user.email_usuario,
+        role: user.nome_role ?? 'client',
+        created_at_usuario: user.created_at_usuario,
+        updated_at_usuario: user.updated_at_usuario,
+      },
+    });
+  },
+
+  async logout(_req: Request, res: Response): Promise<void> {
+    res.clearCookie('refresh_token', { path: '/' });
+    res.status(200).json({ message: 'Logout realizado com sucesso.' });
   },
 
   async me(

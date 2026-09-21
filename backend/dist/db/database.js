@@ -7,6 +7,12 @@ const pg_1 = require("pg");
 const env_1 = require("../config/env");
 exports.pool = new pg_1.Pool({
     connectionString: env_1.env.databaseUrl,
+    max: 5,
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 10_000,
+    ssl: env_1.env.nodeEnv === 'production'
+        ? { rejectUnauthorized: false }
+        : undefined,
 });
 async function testDatabaseConnection() {
     const client = await exports.pool.connect();

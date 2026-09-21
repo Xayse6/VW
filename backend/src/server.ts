@@ -9,9 +9,9 @@ async function startServer(): Promise<void> {
 
     const app = createApp();
 
-    app.listen(env.port, () => {
+    app.listen(env.port, env.host, () => {
       console.log(
-        `API rodando em http://localhost:${env.port}`
+        `API rodando em http://${env.host}:${env.port}`
       );
     });
   } catch (error) {

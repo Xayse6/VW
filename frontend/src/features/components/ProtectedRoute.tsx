@@ -7,8 +7,12 @@ import { useAuth } from '../auth/hooks/useAuth';
  * restaurada, exibe um estado de carregamento; caso o usuario nao esteja
  * autenticado, redireciona para a tela de login.
  */
-export function ProtectedRoute() {
-  const { isAuthenticated, isLoading } = useAuth();
+export function ProtectedRoute({
+  allowedRoles,
+}: {
+  allowedRoles?: Array<'client' | 'adm' | 'emp'>;
+}) {
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -20,6 +24,16 @@ export function ProtectedRoute() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return (
+      <div className="page-access-denied">
+        <h1>Acesso negado</h1>
+        <p>Você não possui permissão para acessar esta área.</p>
+        <Navigate to="/profile" replace />
+      </div>
+    );
   }
 
   return <Outlet />;

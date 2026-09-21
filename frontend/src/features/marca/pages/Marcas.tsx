@@ -3,16 +3,14 @@ import { Link } from "react-router-dom";
 
 import "../css/marcas.css";
 
-import { api, getErrorMessage } from "../../../services/api";
+import { Alert } from "../../components/Alert";
+import { getErrorMessage } from "../../../services/api";
 import { useAuth } from "../../auth/hooks/useAuth";
-
-type Marca = {
-  id_marca: string;
-  nome_marca: string;
-};
+import { marcaService, type Marca } from "../service/marcaService";
 
 export default function Marcas() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const isAdmin = user?.role === "adm";
 
   const [marcas, setMarcas] = useState<Marca[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +28,7 @@ export default function Marcas() {
     try {
       setFormError(null);
 
-      await api.delete(`/marcas/${id}`);
+      await marcaService.remove(id);
 
       setMarcas((marcasAtuais) =>
         marcasAtuais.filter(
@@ -54,12 +52,10 @@ export default function Marcas() {
         setIsLoading(true);
         setFormError(null);
 
-        const response = await api.get<{
-          marcas: Marca[];
-        }>("/marcas");
+        const data = await marcaService.getAll();
 
         if (ativo) {
-          setMarcas(response.data.marcas);
+          setMarcas(data);
         }
       } catch (error) {
         if (ativo) {
@@ -86,26 +82,28 @@ export default function Marcas() {
           <h1>Marcas</h1>
 
           <p>
-            Gerenciamento completo de marcas do sistema
+            {isAdmin
+              ? "Gerenciamento completo de marcas do sistema"
+              : "Você não tem permissão para gerenciar marcas"}
           </p>
         </div>
 
-        <Link
-          to="/cadastrarMarca"
-          className="btn-novo"
-        >
-          <i className="fas fa-plus"></i>
-          Nova Marca
-        </Link>
+        {isAdmin && (
+          <Link
+            to="/cadastrarMarca"
+            className="btn-novo"
+          >
+            <i className="fas fa-plus"></i>
+            Nova Marca
+          </Link>
+        )}
       </section>
 
       <section className="usuarios-card">
         <div className="table-container">
 
           {formError && (
-            <p className="erro">
-              {formError}
-            </p>
+            <Alert type="error" message={formError} />
           )}
 
           {isLoading ? (
@@ -136,30 +134,32 @@ export default function Marcas() {
                       </td>
 
                       <td>
-                        <div className="acoes">
+                        {isAdmin ? (
+                          <div className="acoes">
+                            <Link
+                              to={`/marca/edit/${marca.id_marca}`}
+                              className="btn-editar"
+                            >
+                              <i className="fas fa-edit"></i>
+                              Editar
+                            </Link>
 
-                          <Link
-                            to={`/marca/edit/${marca.id_marca}`}
-                            className="btn-editar"
-                          >
-                            <i className="fas fa-edit"></i>
-                            Editar
-                          </Link>
-
-                          <button
-                            type="button"
-                            className="btn-excluir"
-                            onClick={() =>
-                              excluirMarca(
-                                marca.id_marca
-                              )
-                            }
-                          >
-                            <i className="fas fa-trash"></i>
-                            Excluir
-                          </button>
-
-                        </div>
+                            <button
+                              type="button"
+                              className="btn-excluir"
+                              onClick={() =>
+                                excluirMarca(
+                                  marca.id_marca
+                                )
+                              }
+                            >
+                              <i className="fas fa-trash"></i>
+                              Excluir
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="btn-editar-disabled">—</span>
+                        )}
                       </td>
 
                     </tr>

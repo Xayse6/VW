@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requireAuth = requireAuth;
 exports.requireRole = requireRole;
+exports.requirePermission = requirePermission;
 exports.requireOwnershipOrAdmin = requireOwnershipOrAdmin;
 exports.requireOwnership = requireOwnership;
 const auth_1 = require("../messages/auth");
 const AppError_1 = require("../utils/AppError");
+const permissions_1 = require("../utils/permissions");
 const jwt_1 = require("../utils/jwt");
 /**
  * Middleware de autenticacao. Exige um header "Authorization: Bearer <token>"
@@ -19,7 +21,10 @@ function requireAuth(req, _res, next) {
     const token = authHeader.slice('Bearer '.length).trim();
     try {
         const payload = (0, jwt_1.verifyToken)(token);
-        req.user = payload;
+        req.user = {
+            ...payload,
+            permissions: payload.permissions ?? (0, permissions_1.getPermissionsForRole)(payload.role),
+        };
         next();
     }
     catch {
@@ -32,6 +37,21 @@ function requireAuth(req, _res, next) {
 function requireRole(allowedRoles) {
     return (req, _res, next) => {
         if (!req.user || !allowedRoles.includes(req.user.role)) {
+            throw new AppError_1.AppError(auth_1.AUTH_ERRORS.ACCESS_DENIED, 403);
+        }
+        next();
+    };
+}
+/**
+ * Exige uma permissão específica para a ação.
+ */
+function requirePermission(permission) {
+    return (req, _res, next) => {
+        if (!req.user) {
+            throw new AppError_1.AppError(auth_1.AUTH_ERRORS.USER_NOT_AUTHENTICATED, 401);
+        }
+        const permissions = req.user.permissions ?? (0, permissions_1.getPermissionsForRole)(req.user.role);
+        if (!permissions.includes(permission)) {
             throw new AppError_1.AppError(auth_1.AUTH_ERRORS.ACCESS_DENIED, 403);
         }
         next();

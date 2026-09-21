@@ -21,11 +21,6 @@ import type {
 
 import { AuthContext } from './AuthContext';
 
-/**
- * Provider responsável por manter o estado de autenticação da aplicação,
- * incluindo o usuário logado e as operações de login, cadastro e logout.
- * Ao carregar, tenta restaurar a sessão a partir do token salvo localmente.
- */
 export function AuthProvider({
   children,
 }: {
@@ -33,6 +28,12 @@ export function AuthProvider({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(() => Boolean(getStoredToken()));
+
+  const clearSession = useCallback(() => {
+    clearStoredToken();
+    setUser(null);
+    setIsLoading(false);
+  }, []);
 
   const loadCurrentUser = useCallback(async () => {
     const token = getStoredToken();
@@ -47,12 +48,11 @@ export function AuthProvider({
       const currentUser = await authService.getCurrentUser();
       setUser(currentUser);
     } catch {
-      clearStoredToken();
-      setUser(null);
+      clearSession();
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [clearSession]);
 
   useEffect(() => {
     void loadCurrentUser();
@@ -71,10 +71,8 @@ export function AuthProvider({
   }, []);
 
   const logout = useCallback(() => {
-    clearStoredToken();
-    setUser(null);
-    setIsLoading(false);
-  }, []);
+    clearSession();
+  }, [clearSession]);
 
   const value = useMemo(
     () => ({

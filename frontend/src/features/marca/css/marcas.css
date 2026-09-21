@@ -5,28 +5,20 @@
   --color-surface: #0D1526;
   --color-surface-light: #111C31;
   --color-surface-hover: #13243A;
-
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-strong: rgba(255, 255, 255, 0.14);
-
   --color-text-primary: #E7EAF2;
   --color-text-secondary: #9AA4B8;
   --color-text-muted: #69758B;
-
-  --color-navy: #16213E;
-
   --color-teal: #14A3A5;
   --color-teal-dark: #0E8385;
   --color-teal-soft: rgba(20, 163, 165, 0.12);
-
   --color-coral: #D64550;
   --color-coral-dark: #B8323C;
   --color-coral-soft: rgba(214, 69, 80, 0.12);
-
   --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
-
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-pill: 999px;
@@ -36,6 +28,8 @@
   box-sizing: border-box;
 }
 
+.usuarios-container,
+.marcas-container,
 .modelos-container {
   width: 100%;
   flex: 1;
@@ -50,6 +44,8 @@
   color: var(--color-text-primary);
 }
 
+.usuarios-header,
+.marcas-header,
 .modelos-header {
   width: 100%;
   max-width: 1400px;
@@ -65,14 +61,19 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
+.usuarios-header h1,
+.marcas-header h1,
 .modelos-header h1 {
   margin: 0 0 8px;
   font-family: var(--font-display);
   font-size: 30px;
   font-weight: 700;
   letter-spacing: -0.01em;
+  color: var(--color-text-primary);
 }
 
+.usuarios-header h1::after,
+.marcas-header h1::after,
 .modelos-header h1::after {
   content: '';
   display: block;
@@ -83,6 +84,8 @@
   background: linear-gradient(90deg, var(--color-teal), transparent);
 }
 
+.usuarios-header p,
+.marcas-header p,
 .modelos-header p {
   margin: 0;
   font-size: 14px;
@@ -92,20 +95,26 @@
 .btn-novo {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 12px 20px;
+  flex-shrink: 0;
   color: #fff;
   background: var(--color-teal);
-  text-decoration: none;
   font-size: 14px;
   font-weight: 600;
+  text-decoration: none;
   border-radius: var(--radius-pill);
+  box-shadow: 0 4px 12px rgba(20, 163, 165, 0.18);
 }
 
 .btn-novo:hover {
   background: var(--color-teal-dark);
+  box-shadow: 0 0 0 4px rgba(20, 163, 165, 0.16);
 }
 
+.usuarios-card,
+.marcas-card,
 .modelos-card {
   width: 100%;
   max-width: 1400px;
@@ -113,6 +122,7 @@
   background: rgba(13, 21, 38, 0.96);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
 
@@ -121,88 +131,85 @@
   overflow-x: auto;
 }
 
+.table-container > p,
+.usuarios-table td[colspan] {
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 14.5px;
+}
+
+.usuarios-table,
+.marcas-table,
 .modelos-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 }
 
-.modelos-table th:nth-child(1),
-.modelos-table td:nth-child(1) {
-  width: 30%;
-}
-
-.modelos-table th:nth-child(2),
-.modelos-table td:nth-child(2) {
-  width: 30%;
-}
-
-.modelos-table th:nth-child(3),
-.modelos-table td:nth-child(3) {
-  width: 15%;
-}
-
-.modelos-table th:nth-child(4),
-.modelos-table td:nth-child(4) {
-  width: 25%;
-}
-
+.usuarios-table thead th,
+.marcas-table thead th,
 .modelos-table thead th {
   padding: 15px 20px;
   text-align: left;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
   background: #111C31;
   border-bottom: 1px solid var(--color-border-strong);
 }
 
+.usuarios-table tbody tr,
+.marcas-table tbody tr,
 .modelos-table tbody tr {
   border-bottom: 1px solid var(--color-border);
 }
 
+.usuarios-table tbody tr:hover,
+.marcas-table tbody tr:hover,
 .modelos-table tbody tr:hover {
   background: var(--color-surface-hover);
 }
 
+.usuarios-table tbody td,
+.marcas-table tbody td,
 .modelos-table tbody td {
   padding: 16px 20px;
   color: var(--color-text-primary);
+  vertical-align: middle;
 }
 
+.usuarios-table tbody td:nth-child(1),
+.marcas-table tbody td:nth-child(1),
 .modelos-table tbody td:nth-child(1) {
-  font-weight: 600;
-}
-
-.modelos-table tbody td:nth-child(2) {
-  color: var(--color-text-primary);
-}
-
-.modelos-table tbody td:nth-child(3) {
   font-family: var(--font-mono);
-  color: var(--color-text-secondary);
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 
 .acoes {
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 
 .btn-editar,
-.btn-excluir {
+.btn-excluir,
+.btn-editar-disabled {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 600;
   border-radius: var(--radius-pill);
   text-decoration: none;
-  border: none;
-  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .btn-editar {
@@ -218,6 +225,7 @@
 .btn-excluir {
   background: var(--color-coral-soft);
   color: #FF8A92;
+  cursor: pointer;
 }
 
 .btn-excluir:hover {
@@ -225,10 +233,18 @@
   color: #fff;
 }
 
+.btn-editar-disabled {
+  display: inline-flex;
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+
 .erro {
   padding: 16px;
   text-align: center;
-  color: #ff8a92;
+  color: #FF8A92;
 }
 
 .toast {
@@ -243,17 +259,63 @@
 }
 
 .toast-sucesso {
-  background: linear-gradient(
-    135deg,
-    #0E8385,
-    #14A3A5
-  );
+  background: linear-gradient(135deg, #0E8385, #14A3A5);
 }
 
 .toast-erro {
-  background: linear-gradient(
-    135deg,
-    #B8323C,
-    #D64550
-  );
+  background: linear-gradient(135deg, #B8323C, #D64550);
+}
+
+@media (max-width: 900px) {
+  .usuarios-container,
+  .marcas-container,
+  .modelos-container {
+    padding: 28px 20px 40px;
+  }
+
+  .usuarios-header,
+  .marcas-header,
+  .modelos-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .btn-novo {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .usuarios-container,
+  .marcas-container,
+  .modelos-container {
+    padding: 20px 14px 32px;
+    background-attachment: scroll;
+  }
+
+  .usuarios-header,
+  .marcas-header,
+  .modelos-header {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .usuarios-header h1,
+  .marcas-header h1,
+  .modelos-header h1 {
+    font-size: 26px;
+  }
+
+  .usuarios-card,
+  .marcas-card,
+  .modelos-card {
+    border-radius: 14px;
+  }
+
+  .btn-editar,
+  .btn-excluir,
+  .btn-editar-disabled {
+    flex: 1;
+    padding: 9px 12px;
+  }
 }

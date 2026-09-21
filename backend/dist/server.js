@@ -8,8 +8,8 @@ async function startServer() {
         await (0, database_1.testDatabaseConnection)();
         await (0, database_1.syncDatabase)();
         const app = (0, app_1.createApp)();
-        app.listen(env_1.env.port, () => {
-            console.log(`API rodando em http://localhost:${env_1.env.port}`);
+        app.listen(env_1.env.port, env_1.env.host, () => {
+            console.log(`API rodando em http://${env_1.env.host}:${env_1.env.port}`);
         });
     }
     catch (error) {

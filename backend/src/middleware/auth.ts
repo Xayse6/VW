@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AUTH_ERRORS } from '../messages/auth';
 import { AppError } from '../utils/AppError';
+import { getPermissionsForRole } from '../utils/permissions';
 import { verifyToken } from '../utils/jwt';
 
 /**
@@ -18,7 +19,12 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction): v
 
   try {
     const payload = verifyToken(token);
-    req.user = payload;
+
+    req.user = {
+      ...payload,
+      permissions: payload.permissions ?? getPermissionsForRole(payload.role),
+    };
+
     next();
   } catch {
     throw new AppError(AUTH_ERRORS.INVALID_SESSION, 401);
@@ -33,6 +39,25 @@ export function requireRole(allowedRoles: Array<'adm' | 'client' | 'emp'>) {
     if (!req.user || !allowedRoles.includes(req.user.role)) {
       throw new AppError(AUTH_ERRORS.ACCESS_DENIED, 403);
     }
+    next();
+  };
+}
+
+/**
+ * Exige uma permissão específica para a ação.
+ */
+export function requirePermission(permission: string) {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      throw new AppError(AUTH_ERRORS.USER_NOT_AUTHENTICATED, 401);
+    }
+
+    const permissions = req.user.permissions ?? getPermissionsForRole(req.user.role);
+
+    if (!permissions.includes(permission)) {
+      throw new AppError(AUTH_ERRORS.ACCESS_DENIED, 403);
+    }
+
     next();
   };
 }
@@ -67,3 +92,4 @@ export function requireOwnership(paramName = 'id') {
     next();
   };
 }
+

@@ -5,6 +5,11 @@ import type { UpdateUserPayload, User } from '../types';
  * Camada de servico responsavel pelas chamadas de gerenciamento de usuarios.
  */
 export const userService = {
+  async getAll(): Promise<User[]> {
+    const { data } = await api.get<{ users: User[] }>('/users');
+    return data.users;
+  },
+
   async getById(id: string): Promise<User> {
     const { data } = await api.get<{ user: User }>(`/users/${id}`);
     return data.user;

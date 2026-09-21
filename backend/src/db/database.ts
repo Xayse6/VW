@@ -4,6 +4,12 @@ import { env } from '../config/env';
 
 export const pool = new Pool({
   connectionString: env.databaseUrl,
+  max: 5,
+  idleTimeoutMillis: 30_000,
+  connectionTimeoutMillis: 10_000,
+  ssl: env.nodeEnv === 'production'
+    ? { rejectUnauthorized: false }
+    : undefined,
 });
 
 export async function testDatabaseConnection(): Promise<void> {
@@ -108,6 +114,9 @@ export async function syncDatabase(): Promise<void> {
     CREATE UNIQUE INDEX IF NOT EXISTS unique_marcas_nome_marca
       ON marcas (nome_marca);
 
+    DO $seed$
+    BEGIN
+      IF ${env.seedDatabase ? 'true' : 'false'} THEN
     INSERT INTO roles (nome_role)
     SELECT 'adm' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE nome_role = 'adm');
 
@@ -206,6 +215,10 @@ export async function syncDatabase(): Promise<void> {
       AND NOT EXISTS (
         SELECT 1 FROM modelos WHERE nome_modelo = 'Yaris' AND ano_modelo = 2024
       );
+
+      END IF;
+    END
+    $seed$;
   `);
 
   console.log('Banco sincronizado com sucesso.');

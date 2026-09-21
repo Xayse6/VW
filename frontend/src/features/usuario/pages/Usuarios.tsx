@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 import "../css/usuarios.css";
 
-import { api, getErrorMessage } from "../../../services/api";
+import { Alert } from "../../components/Alert";
+import { getErrorMessage } from "../../../services/api";
+import { userService } from "../../../services/userService";
 import { useAuth } from "../../auth/hooks/useAuth";
 import type { User } from "../../../types";
 
@@ -11,12 +13,12 @@ type FiltroRole = "todos" | "client" | "adm" | "emp";
 
 export default function Usuarios() {
   const { isAuthenticated, user } = useAuth();
+  const isAdmin = user?.role === "adm";
 
   const [usuarios, setUsuarios] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Filtro atual
   const [filtroRole, setFiltroRole] = useState<FiltroRole>("todos");
 
   async function excluirUsuario(id: string) {
@@ -31,7 +33,7 @@ export default function Usuarios() {
     try {
       setFormError(null);
 
-      await api.delete(`/users/${id}`);
+      await userService.remove(id);
 
       setUsuarios((usuariosAtuais) =>
         usuariosAtuais.filter(
@@ -44,7 +46,7 @@ export default function Usuarios() {
   }
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
       return;
     }
 
@@ -55,10 +57,17 @@ export default function Usuarios() {
         setIsLoading(true);
         setFormError(null);
 
-        const response = await api.get<{ users: User[] }>("/users");
+        if (!isAdmin) {
+          if (ativo && user) {
+            setUsuarios([user]);
+          }
+          return;
+        }
+
+        const data = await userService.getAll();
 
         if (ativo) {
-          setUsuarios(response.data.users);
+          setUsuarios(data);
         }
       } catch (error) {
         if (ativo) {
@@ -76,7 +85,7 @@ export default function Usuarios() {
     return () => {
       ativo = false;
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user, isAdmin]);
 
   function formatarRole(role: User["role"]) {
     switch (role) {
@@ -94,8 +103,10 @@ export default function Usuarios() {
     }
   }
 
+  const usuariosVisiveis = isAdmin ? usuarios : [user].filter(Boolean) as User[];
+
   // Filtra os usuários de acordo com o botão selecionado
-  const usuariosFiltrados = usuarios.filter((usuario) => {
+  const usuariosFiltrados = usuariosVisiveis.filter((usuario) => {
     if (filtroRole === "todos") {
       return true;
     }
@@ -111,64 +122,65 @@ export default function Usuarios() {
           <h1>Usuários</h1>
 
           <p>
-            Gerenciamento completo de usuários do sistema
+            {isAdmin
+              ? "Gerenciamento completo de usuários do sistema"
+              : "Você só pode visualizar o seu perfil"}
           </p>
         </div>
 
-        <Link
-          to="/register"
-          className="btn-novo"
-        >
-          <i className="fas fa-user-plus"></i>
-          Novo Usuário
-        </Link>
+        {isAdmin && (
+          <Link
+            to="/register"
+            className="btn-novo"
+          >
+            <i className="fas fa-user-plus"></i>
+            Novo Usuário
+          </Link>
+        )}
       </section>
 
       <section className="usuarios-card">
 
-        {/* FILTROS */}
-<div className="filtros-usuarios">
+        {isAdmin && (
+          <div className="filtros-usuarios">
+            <button
+              type="button"
+              className={filtroRole === "todos" ? "filtro-ativo" : ""}
+              onClick={() => setFiltroRole("todos")}
+            >
+              Todos
+            </button>
 
-  <button
-    type="button"
-    className={filtroRole === "todos" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("todos")}
-  >
-    Todos
-  </button>
+            <button
+              type="button"
+              className={filtroRole === "client" ? "filtro-ativo" : ""}
+              onClick={() => setFiltroRole("client")}
+            >
+              Clientes
+            </button>
 
-  <button
-    type="button"
-    className={filtroRole === "client" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("client")}
-  >
-    Clientes
-  </button>
+            <button
+              type="button"
+              className={filtroRole === "adm" ? "filtro-ativo" : ""}
+              onClick={() => setFiltroRole("adm")}
+            >
+              ADMs
+            </button>
 
-  <button
-    type="button"
-    className={filtroRole === "adm" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("adm")}
-  >
-    ADMs
-  </button>
-
-  <button
-    type="button"
-    className={filtroRole === "emp" ? "filtro-ativo" : ""}
-    onClick={() => setFiltroRole("emp")}
-  >
-    Funcionários
-  </button>
-
-</div>
+            <button
+              type="button"
+              className={filtroRole === "emp" ? "filtro-ativo" : ""}
+              onClick={() => setFiltroRole("emp")}
+            >
+              Funcionários
+            </button>
+          </div>
+        )}
 
         <div className="table-container">
 
           {formError && (
-            <p className="erro">
-              {formError}
-            </p>
+            <Alert type="error" message={formError} />
           )}
 
           {isLoading ? (

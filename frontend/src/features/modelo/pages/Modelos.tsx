@@ -3,19 +3,14 @@ import { Link } from "react-router-dom";
 
 import "../css/modelos.css";
 
-import { api, getErrorMessage } from "../../../services/api";
+import { Alert } from "../../components/Alert";
+import { getErrorMessage } from "../../../services/api";
 import { useAuth } from "../../auth/hooks/useAuth";
-
-type Modelo = {
-  id_modelo: string;
-  id_marca: string;
-  nome_marca: string;
-  nome_modelo: string;
-  ano_modelo: number;
-};
+import { modeloService, type Modelo } from "../service/modeloService";
 
 export default function Modelos() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const isAdmin = user?.role === "adm";
 
   const [modelos, setModelos] = useState<Modelo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +28,7 @@ export default function Modelos() {
     try {
       setFormError(null);
 
-      await api.delete(`/modelos/${id}`);
+      await modeloService.remove(id);
 
       setModelos((modelosAtuais) =>
         modelosAtuais.filter(
@@ -57,12 +52,10 @@ export default function Modelos() {
         setIsLoading(true);
         setFormError(null);
 
-        const response = await api.get<{
-          modelos: Modelo[];
-        }>("/modelos");
+        const data = await modeloService.getAll();
 
         if (ativo) {
-          setModelos(response.data.modelos);
+          setModelos(data);
         }
       } catch (error) {
         if (ativo) {
@@ -89,26 +82,28 @@ export default function Modelos() {
           <h1>Modelos</h1>
 
           <p>
-            Gerenciamento completo de modelos do sistema
+            {isAdmin
+              ? "Gerenciamento completo de modelos do sistema"
+              : "Visualização de modelos disponíveis"}
           </p>
         </div>
 
-        <Link
-          to="/cadastrarModelo"
-          className="btn-novo"
-        >
-          <i className="fas fa-plus"></i>
-          Novo Modelo
-        </Link>
+        {isAdmin && (
+          <Link
+            to="/cadastrarModelo"
+            className="btn-novo"
+          >
+            <i className="fas fa-plus"></i>
+            Novo Modelo
+          </Link>
+        )}
       </section>
 
       <section className="usuarios-card">
         <div className="table-container">
 
           {formError && (
-            <p className="erro">
-              {formError}
-            </p>
+            <Alert type="error" message={formError} />
           )}
 
           {isLoading ? (
@@ -144,30 +139,32 @@ export default function Modelos() {
                       <td>{modelo.ano_modelo}</td>
 
                       <td>
-                        <div className="acoes">
+                        {isAdmin ? (
+                          <div className="acoes">
+                            <Link
+                              to={`/modelo/edit/${modelo.id_modelo}`}
+                              className="btn-editar"
+                            >
+                              <i className="fas fa-edit"></i>
+                              Editar
+                            </Link>
 
-                          <Link
-                            to={`/modelo/edit/${modelo.id_modelo}`}
-                            className="btn-editar"
-                          >
-                            <i className="fas fa-edit"></i>
-                            Editar
-                          </Link>
-
-                          <button
-                            type="button"
-                            className="btn-excluir"
-                            onClick={() =>
-                              excluirModelo(
-                                modelo.id_modelo
-                              )
-                            }
-                          >
-                            <i className="fas fa-trash"></i>
-                            Excluir
-                          </button>
-
-                        </div>
+                            <button
+                              type="button"
+                              className="btn-excluir"
+                              onClick={() =>
+                                excluirModelo(
+                                  modelo.id_modelo
+                                )
+                              }
+                            >
+                              <i className="fas fa-trash"></i>
+                              Excluir
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="btn-editar-disabled">—</span>
+                        )}
                       </td>
 
                     </tr>

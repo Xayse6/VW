@@ -16,11 +16,20 @@ router.post(
   asyncHandler(AuthController.login)
 );
 
+router.post(
+  '/refresh',
+  asyncHandler(AuthController.refresh)
+);
+
+router.post(
+  '/logout',
+  asyncHandler(AuthController.logout)
+);
+
 router.get(
   '/me',
   requireAuth,
   asyncHandler(AuthController.me)
 );
-
 
 export default router;
