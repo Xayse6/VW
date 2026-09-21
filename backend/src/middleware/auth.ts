@@ -25,6 +25,36 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction): v
 }
 
 /**
+ * Exige que o usuário possua um dos papéis (roles) autorizados.
+ */
+export function requireRole(allowedRoles: Array<'adm' | 'client' | 'emp'>) {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      throw new AppError('Acesso negado. Você não tem permissão para realizar esta ação.', 403);
+    }
+    next();
+  };
+}
+
+/**
+ * Garante que o usuario autenticado seja admin ou o proprio dono do recurso.
+ */
+export function requireOwnershipOrAdmin(paramName = 'id') {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    const targetId = req.params[paramName];
+    if (!req.user) {
+      throw new AppError('Nao autenticado.', 401);
+    }
+
+    if (req.user.role !== 'adm' && req.user.sub !== targetId) {
+      throw new AppError('Voce nao tem permissao para acessar ou alterar este recurso.', 403);
+    }
+
+    next();
+  };
+}
+
+/**
  * Garante que o usuario autenticado so possa acessar/alterar os proprios dados.
  */
 export function requireOwnership(paramName = 'id') {
