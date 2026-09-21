@@ -230,29 +230,32 @@ async promoteToAdmin(
     }
 
     values.push(id_usuario);
-
     const result =
-      await pool.query<UserRecord>(
-        `
-        UPDATE users
-        SET
-          ${fields.join(', ')},
-          updated_at_usuario = NOW()
-        WHERE id_usuario = $${values.length}
-        RETURNING
-          id_usuario,
-          nome_usuario,
-          email_usuario,
-          password_hash,
-          id_role,
-          created_at_usuario,
-          updated_at_usuario
-        `,
-        values
-      );
+    await pool.query<UserRecord>(
+      `
+      UPDATE users
+      SET
+        ${fields.join(', ')},
+        updated_at_usuario = NOW()
+      WHERE id_usuario = $${values.length}
+      RETURNING
+        id_usuario,
+        nome_usuario,
+        email_usuario,
+        password_hash,
+        id_role,
+        created_at_usuario,
+        updated_at_usuario
+      `,
+      values
+    );
 
-    return result.rows[0];
-  },
+    if (!result.rows[0]) {
+      return undefined;
+    }
+
+    return this.findById(id_usuario);
+},
 
   async delete(
     id_usuario: string
