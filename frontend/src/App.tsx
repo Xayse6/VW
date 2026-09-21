@@ -7,6 +7,7 @@ import { NotFound } from './features/components/NotFound';
 import Navbar from './features/components/Navbar';
 import Footer from './features/components/Footer';
 
+import { GuestRoute } from './features/components/GuestRoute';
 import { ProtectedRoute } from './features/components/ProtectedRoute';
 import { AuthProvider } from './features/context/AuthProvider';
 
@@ -38,9 +39,12 @@ export function App() {
 
           <Route path="/"element={<Home/>}/>
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cadastro" element={<Register />} />
+          {/* Rotas acessíveis apenas por quem NÃO está logado */}
+          <Route element={<GuestRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/cadastro" element={<Register />} />
+          </Route>
 
           <Route element={<ProtectedRoute />}>
             <Route path="/usuarios" element={<Usuarios />}/>
