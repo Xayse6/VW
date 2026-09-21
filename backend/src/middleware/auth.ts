@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { AUTH_ERRORS } from '../messages/auth';
 import { AppError } from '../utils/AppError';
 import { verifyToken } from '../utils/jwt';
 
@@ -10,7 +11,7 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction): v
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new AppError('Nao autenticado. Faca login para continuar.', 401);
+    throw new AppError(AUTH_ERRORS.NOT_AUTHENTICATED, 401);
   }
 
   const token = authHeader.slice('Bearer '.length).trim();
@@ -20,7 +21,7 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction): v
     req.user = payload;
     next();
   } catch {
-    throw new AppError('Sessao invalida ou expirada. Faca login novamente.', 401);
+    throw new AppError(AUTH_ERRORS.INVALID_SESSION, 401);
   }
 }
 
@@ -30,7 +31,7 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction): v
 export function requireRole(allowedRoles: Array<'adm' | 'client' | 'emp'>) {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user || !allowedRoles.includes(req.user.role)) {
-      throw new AppError('Acesso negado. Você não tem permissão para realizar esta ação.', 403);
+      throw new AppError(AUTH_ERRORS.ACCESS_DENIED, 403);
     }
     next();
   };
@@ -43,11 +44,11 @@ export function requireOwnershipOrAdmin(paramName = 'id') {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const targetId = req.params[paramName];
     if (!req.user) {
-      throw new AppError('Nao autenticado.', 401);
+      throw new AppError(AUTH_ERRORS.USER_NOT_AUTHENTICATED, 401);
     }
 
     if (req.user.role !== 'adm' && req.user.sub !== targetId) {
-      throw new AppError('Voce nao tem permissao para acessar ou alterar este recurso.', 403);
+      throw new AppError(AUTH_ERRORS.OWNERSHIP_DENIED, 403);
     }
 
     next();
@@ -61,7 +62,7 @@ export function requireOwnership(paramName = 'id') {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const targetId = req.params[paramName];
     if (!req.user || req.user.sub !== targetId) {
-      throw new AppError('Voce nao tem permissao para acessar este recurso.', 403);
+      throw new AppError(AUTH_ERRORS.OWNERSHIP_REQUIRED, 403);
     }
     next();
   };

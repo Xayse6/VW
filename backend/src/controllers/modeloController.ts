@@ -1,4 +1,6 @@
 import type { Request, Response } from 'express';
+import { MODELO_ERRORS } from '../messages/modelo';
+import { SUCCESS_MESSAGES } from '../messages/success';
 import { ModeloModel } from '../model/Modelo';
 import { AppError } from '../utils/AppError';
 import { createModeloSchema, updateModeloSchema } from '../utils/validation';
@@ -16,13 +18,13 @@ export const ModeloController = {
     const id = req.params.id;
 
     if (typeof id !== 'string') {
-      throw new AppError('ID inválido.', 400);
+      throw new AppError(MODELO_ERRORS.INVALID_ID, 400);
     }
 
     const modelo = await ModeloModel.findById(id);
 
     if (!modelo) {
-      throw new AppError('Modelo não encontrado.', 404);
+      throw new AppError(MODELO_ERRORS.NOT_FOUND, 404);
     }
 
     res.status(200).json({
@@ -40,7 +42,7 @@ export const ModeloController = {
     });
 
     res.status(201).json({
-      message: 'Modelo cadastrado com sucesso.',
+      message: SUCCESS_MESSAGES.MODELO_CREATED,
       modelo: ModeloModel.toPublic(modelo),
     });
   },
@@ -49,14 +51,14 @@ export const ModeloController = {
     const id = req.params.id;
 
     if (typeof id !== 'string') {
-      throw new AppError('ID inválido.', 400);
+      throw new AppError(MODELO_ERRORS.INVALID_ID, 400);
     }
 
     const data = updateModeloSchema.parse(req.body);
 
     const existing = await ModeloModel.findById(id);
     if (!existing) {
-      throw new AppError('Modelo não encontrado.', 404);
+      throw new AppError(MODELO_ERRORS.NOT_FOUND, 404);
     }
 
     const updated = await ModeloModel.update(id, {
@@ -66,11 +68,11 @@ export const ModeloController = {
     });
 
     if (!updated) {
-      throw new AppError('Não foi possível atualizar o modelo.', 500);
+      throw new AppError(MODELO_ERRORS.UPDATE_FAILED, 500);
     }
 
     res.status(200).json({
-      message: 'Modelo atualizado com sucesso.',
+      message: SUCCESS_MESSAGES.MODELO_UPDATED,
       modelo: ModeloModel.toPublic(updated),
     });
   },
@@ -79,17 +81,17 @@ export const ModeloController = {
     const id = req.params.id;
 
     if (typeof id !== 'string') {
-      throw new AppError('ID inválido.', 400);
+      throw new AppError(MODELO_ERRORS.INVALID_ID, 400);
     }
 
     const deleted = await ModeloModel.delete(id);
 
     if (!deleted) {
-      throw new AppError('Modelo não encontrado.', 404);
+      throw new AppError(MODELO_ERRORS.NOT_FOUND, 404);
     }
 
     res.status(200).json({
-      message: 'Modelo excluído com sucesso.',
+      message: SUCCESS_MESSAGES.MODELO_DELETED,
     });
   },
 };

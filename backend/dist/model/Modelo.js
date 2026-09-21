@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModeloModel = void 0;
 const database_1 = require("../db/database");
+const system_1 = require("../messages/system");
 exports.ModeloModel = {
     async create(params) {
         const insertResult = await database_1.pool.query(`
@@ -15,7 +16,7 @@ exports.ModeloModel = {
       `, [params.id_marca, params.nome_modelo, params.ano_modelo]);
         const created = await this.findById(insertResult.rows[0].id_modelo);
         if (!created) {
-            throw new Error('Falha ao recuperar modelo recém-criado.');
+            throw new Error(system_1.SYSTEM_MESSAGES.MODELO_CREATE_FAILED);
         }
         return created;
     },

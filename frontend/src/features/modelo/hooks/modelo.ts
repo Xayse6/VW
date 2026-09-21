@@ -99,7 +99,7 @@ export function useModeloHooks(id?: string) {
         );
       } else {
         await api.post(
-          "/modelos/cadastroModelo",
+          "/modelos",
           payload
         );
 

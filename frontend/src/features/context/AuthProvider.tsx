@@ -55,36 +55,8 @@ export function AuthProvider({
   }, []);
 
   useEffect(() => {
-    const token = getStoredToken();
-    if (!token) {
-      return;
-    }
-
-    let isMounted = true;
-
-    void authService
-      .getCurrentUser()
-      .then((currentUser) => {
-        if (isMounted) {
-          setUser(currentUser);
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          clearStoredToken();
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    void loadCurrentUser();
+  }, [loadCurrentUser]);
 
   const login = useCallback(async (payload: LoginPayload) => {
     const response = await authService.login(payload);
@@ -101,6 +73,7 @@ export function AuthProvider({
   const logout = useCallback(() => {
     clearStoredToken();
     setUser(null);
+    setIsLoading(false);
   }, []);
 
   const value = useMemo(

@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.env = void 0;
 require("dotenv/config");
+const system_1 = require("../messages/system");
 function requiredEnv(name) {
     const value = process.env[name];
     if (!value) {
-        throw new Error(`${name} nao configurada. Verifique o arquivo .env.`);
+        throw new Error(system_1.SYSTEM_MESSAGES.ENV_MISSING(name));
     }
     return value;
 }

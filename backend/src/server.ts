@@ -1,10 +1,11 @@
 import { createApp } from './app';
 import { env } from './config/env';
-import { testDatabaseConnection } from './db/database';
+import { syncDatabase, testDatabaseConnection } from './db/database';
 
 async function startServer(): Promise<void> {
   try {
     await testDatabaseConnection();
+    await syncDatabase();
 
     const app = createApp();
 

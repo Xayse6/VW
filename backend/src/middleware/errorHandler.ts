@@ -7,6 +7,7 @@ import type {
 
 import { ZodError } from 'zod';
 
+import { COMMON_ERRORS } from '../messages/common';
 import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
 
@@ -19,7 +20,7 @@ export function errorHandler(
   // Erros de validação do Zod
   if (err instanceof ZodError) {
     res.status(422).json({
-      error: 'Dados invalidos.',
+      error: COMMON_ERRORS.INVALID_DATA,
       details: err.issues.map((issue) => ({
         field: issue.path.join('.'),
         message: issue.message,
@@ -45,9 +46,9 @@ export function errorHandler(
   ) {
     const constraint = 'constraint' in err ? String(err.constraint) : '';
 
-    let message = 'Registro já cadastrado.';
+    let message = COMMON_ERRORS.DUPLICATE_RECORD;
     if (constraint.includes('email') || constraint.includes('users')) {
-      message = 'E-mail já cadastrado.';
+      message = COMMON_ERRORS.EMAIL_ALREADY_REGISTERED;
     } else if (constraint.includes('marca')) {
       message = 'Já existe uma marca cadastrada com este nome.';
     } else if (constraint.includes('role')) {
@@ -65,8 +66,7 @@ export function errorHandler(
   console.error('[ERRO NAO TRATADO]', err);
 
   res.status(500).json({
-    error:
-      'Erro interno do servidor. Tente novamente mais tarde.',
+    error: COMMON_ERRORS.UNEXPECTED_SERVER,
     ...(env.nodeEnv === 'development' &&
     err instanceof Error
       ? {
@@ -84,7 +84,7 @@ export function notFoundHandler(
   res: Response
 ): void {
   res.status(404).json({
-    error: `Rota nao encontrada: ${req.method} ${req.originalUrl}`,
+    error: COMMON_ERRORS.ROUTE_NOT_FOUND(req.method, req.originalUrl),
   });
 }
 

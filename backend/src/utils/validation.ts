@@ -1,22 +1,24 @@
 import { z } from 'zod';
 
+import { VALIDATION_MESSAGES } from '../messages/validation';
+
 export const registerSchema = z.object({
   nome_usuario: z
     .string()
     .trim()
-    .min(2, 'O nome deve ter pelo menos 2 caracteres.')
-    .max(100, 'O nome deve ter no máximo 100 caracteres.'),
+    .min(2, VALIDATION_MESSAGES.USER_NAME_MIN)
+    .max(100, VALIDATION_MESSAGES.USER_NAME_MAX),
 
   email_usuario: z
     .string()
     .trim()
     .toLowerCase()
-    .email('Informe um e-mail válido.'),
+    .email(VALIDATION_MESSAGES.EMAIL_INVALID),
 
   password: z
     .string()
-    .min(6, 'A senha deve ter pelo menos 6 caracteres.')
-    .max(72, 'A senha deve ter no máximo 72 caracteres.'),
+    .min(6, VALIDATION_MESSAGES.PASSWORD_MIN)
+    .max(72, VALIDATION_MESSAGES.PASSWORD_MAX),
 });
 
 export const loginSchema = z.object({
@@ -24,11 +26,11 @@ export const loginSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
-    .email('Informe um e-mail válido.'),
+    .email(VALIDATION_MESSAGES.EMAIL_INVALID),
 
   password: z
     .string()
-    .min(1, 'A senha é obrigatória.'),
+    .min(1, VALIDATION_MESSAGES.PASSWORD_REQUIRED),
 });
 
 export const updateUserSchema = z
@@ -36,26 +38,26 @@ export const updateUserSchema = z
     nome_usuario: z
       .string()
       .trim()
-      .min(2, 'O nome deve ter pelo menos 2 caracteres.')
-      .max(100, 'O nome deve ter no máximo 100 caracteres.')
+      .min(2, VALIDATION_MESSAGES.USER_NAME_MIN)
+      .max(100, VALIDATION_MESSAGES.USER_NAME_MAX)
       .optional(),
 
     email_usuario: z
       .string()
       .trim()
       .toLowerCase()
-      .email('Informe um e-mail válido.')
+      .email(VALIDATION_MESSAGES.EMAIL_INVALID)
       .optional(),
 
     currentPassword: z
       .string()
-      .min(1, 'A senha atual é obrigatória.')
+      .min(1, VALIDATION_MESSAGES.CURRENT_PASSWORD_REQUIRED)
       .optional(),
 
     newPassword: z
       .string()
-      .min(6, 'A nova senha deve ter pelo menos 6 caracteres.')
-      .max(72, 'A nova senha deve ter no máximo 72 caracteres.')
+      .min(6, VALIDATION_MESSAGES.NEW_PASSWORD_MIN)
+      .max(72, VALIDATION_MESSAGES.NEW_PASSWORD_MAX)
       .optional(),
   })
   .refine(
@@ -63,7 +65,7 @@ export const updateUserSchema = z
       !data.newPassword || !!data.currentPassword,
     {
       message:
-        'Informe a senha atual para definir uma nova senha.',
+        VALIDATION_MESSAGES.CURRENT_PASSWORD_FOR_NEW,
       path: ['currentPassword'],
     }
   );
@@ -81,45 +83,45 @@ export const createMarcaSchema = z.object({
   nome_marca: z
     .string()
     .trim()
-    .min(2, 'O nome da marca deve ter pelo menos 2 caracteres.')
-    .max(50, 'O nome da marca deve ter no máximo 50 caracteres.'),
+    .min(2, VALIDATION_MESSAGES.MARCA_NAME_MIN)
+    .max(50, VALIDATION_MESSAGES.MARCA_NAME_MAX),
 });
 
 export const updateMarcaSchema = z.object({
   nome_marca: z
     .string()
     .trim()
-    .min(2, 'O nome da marca deve ter pelo menos 2 caracteres.')
-    .max(50, 'O nome da marca deve ter no máximo 50 caracteres.'),
+    .min(2, VALIDATION_MESSAGES.MARCA_NAME_MIN)
+    .max(50, VALIDATION_MESSAGES.MARCA_NAME_MAX),
 });
 
 export const createModeloSchema = z.object({
-  id_marca: z.string().uuid('ID da marca inválido.'),
+  id_marca: z.string().uuid(VALIDATION_MESSAGES.MODELO_ID_INVALID),
   nome_modelo: z
     .string()
     .trim()
-    .min(1, 'O nome do modelo é obrigatório.')
-    .max(50, 'O nome do modelo deve ter no máximo 50 caracteres.'),
+    .min(1, VALIDATION_MESSAGES.MODELO_NAME_REQUIRED)
+    .max(50, VALIDATION_MESSAGES.MODELO_NAME_MAX),
   ano_modelo: z.coerce
     .number()
-    .int('Ano deve ser um número inteiro.')
-    .min(1900, 'Ano deve ser maior que 1900.')
-    .max(2100, 'Ano inválido.'),
+    .int(VALIDATION_MESSAGES.MODELO_YEAR_INT)
+    .min(1900, VALIDATION_MESSAGES.MODELO_YEAR_MIN)
+    .max(2100, VALIDATION_MESSAGES.MODELO_YEAR_MAX),
 });
 
 export const updateModeloSchema = z.object({
-  id_marca: z.string().uuid('ID da marca inválido.').optional(),
+  id_marca: z.string().uuid(VALIDATION_MESSAGES.MODELO_ID_INVALID).optional(),
   nome_modelo: z
     .string()
     .trim()
-    .min(1, 'O nome do modelo é obrigatório.')
-    .max(50, 'O nome do modelo deve ter no máximo 50 caracteres.')
+    .min(1, VALIDATION_MESSAGES.MODELO_NAME_REQUIRED)
+    .max(50, VALIDATION_MESSAGES.MODELO_NAME_MAX)
     .optional(),
   ano_modelo: z.coerce
     .number()
-    .int('Ano deve ser um número inteiro.')
-    .min(1900, 'Ano deve ser maior que 1900.')
-    .max(2100, 'Ano inválido.')
+    .int(VALIDATION_MESSAGES.MODELO_YEAR_INT)
+    .min(1900, VALIDATION_MESSAGES.MODELO_YEAR_MIN)
+    .max(2100, VALIDATION_MESSAGES.MODELO_YEAR_MAX)
     .optional(),
 });
 

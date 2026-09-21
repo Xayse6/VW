@@ -1,4 +1,6 @@
 import type { Request, Response } from 'express';
+import { MARCA_ERRORS } from '../messages/marca';
+import { SUCCESS_MESSAGES } from '../messages/success';
 import { MarcaModel } from '../model/Marca';
 import { AppError } from '../utils/AppError';
 import { createMarcaSchema, updateMarcaSchema } from '../utils/validation';
@@ -16,13 +18,13 @@ export const MarcaController = {
     const id = req.params.id;
 
     if (typeof id !== 'string') {
-      throw new AppError('ID inválido.', 400);
+      throw new AppError(MARCA_ERRORS.INVALID_ID, 400);
     }
 
     const marca = await MarcaModel.findById(id);
 
     if (!marca) {
-      throw new AppError('Marca não encontrada.', 404);
+      throw new AppError(MARCA_ERRORS.NOT_FOUND, 404);
     }
 
     res.status(200).json({
@@ -38,7 +40,7 @@ export const MarcaController = {
     });
 
     res.status(201).json({
-      message: 'Marca cadastrada com sucesso.',
+      message: SUCCESS_MESSAGES.MARCA_CREATED,
       marca: MarcaModel.toPublic(marca),
     });
   },
@@ -47,14 +49,14 @@ export const MarcaController = {
     const id_marca = req.params.id;
 
     if (typeof id_marca !== 'string') {
-      throw new AppError('ID inválido.', 400);
+      throw new AppError(MARCA_ERRORS.INVALID_ID, 400);
     }
 
     const data = updateMarcaSchema.parse(req.body);
 
     const marca = await MarcaModel.findById(id_marca);
     if (!marca) {
-      throw new AppError('Marca não encontrada.', 404);
+      throw new AppError(MARCA_ERRORS.NOT_FOUND, 404);
     }
 
     const updated = await MarcaModel.update(id_marca, {
@@ -62,11 +64,11 @@ export const MarcaController = {
     });
 
     if (!updated) {
-      throw new AppError('Não foi possível atualizar a marca.', 500);
+      throw new AppError(MARCA_ERRORS.UPDATE_FAILED, 500);
     }
 
     res.status(200).json({
-      message: 'Marca atualizada com sucesso.',
+      message: SUCCESS_MESSAGES.MARCA_UPDATED,
       marca: MarcaModel.toPublic(updated),
     });
   },
@@ -75,17 +77,17 @@ export const MarcaController = {
     const id_marca = req.params.id;
 
     if (typeof id_marca !== 'string') {
-      throw new AppError('ID inválido.', 400);
+      throw new AppError(MARCA_ERRORS.INVALID_ID, 400);
     }
 
     const deleted = await MarcaModel.delete(id_marca);
 
     if (!deleted) {
-      throw new AppError('Marca não encontrada.', 404);
+      throw new AppError(MARCA_ERRORS.NOT_FOUND, 404);
     }
 
     res.status(200).json({
-      message: 'Marca excluída com sucesso.',
+      message: SUCCESS_MESSAGES.MARCA_DELETED,
     });
   },
 

@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
 
+import { AUTH_ERRORS } from '../messages/auth';
+import { SUCCESS_MESSAGES } from '../messages/success';
 import { UserModel } from '../model/User';
 import { AppError } from '../utils/AppError';
 
@@ -29,7 +31,7 @@ export const AuthController = {
 
     if (existing) {
       throw new AppError(
-        'Este e-mail ja esta cadastrado.',
+        AUTH_ERRORS.EMAIL_ALREADY_REGISTERED,
         409
       );
     }
@@ -50,7 +52,7 @@ export const AuthController = {
     });
 
     res.status(201).json({
-      message: 'Usuario cadastrado com sucesso.',
+      message: SUCCESS_MESSAGES.USER_REGISTERED,
       user: {
         id_usuario: user.id_usuario,
         nome_usuario: user.nome_usuario,
@@ -78,7 +80,7 @@ export const AuthController = {
 
     if (!user) {
       throw new AppError(
-        'Credenciais invalidas.',
+        AUTH_ERRORS.INVALID_CREDENTIALS,
         401
       );
     }
@@ -91,7 +93,7 @@ export const AuthController = {
 
     if (!isPasswordValid) {
       throw new AppError(
-        'Credenciais invalidas.',
+        AUTH_ERRORS.INVALID_CREDENTIALS,
         401
       );
     }
@@ -103,7 +105,7 @@ export const AuthController = {
     });
 
     res.status(200).json({
-      message: 'Login realizado com sucesso.',
+      message: SUCCESS_MESSAGES.USER_LOGIN,
       user: {
         id_usuario: user.id_usuario,
         nome_usuario: user.nome_usuario,
@@ -126,7 +128,7 @@ export const AuthController = {
 
     if (!userId) {
       throw new AppError(
-        'Usuario nao autenticado.',
+        AUTH_ERRORS.USER_NOT_AUTHENTICATED,
         401
       );
     }

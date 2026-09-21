@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+const success_1 = require("../messages/success");
+const user_1 = require("../messages/user");
 const User_1 = require("../model/User");
 const AppError_1 = require("../utils/AppError");
 const password_1 = require("../utils/password");
@@ -15,11 +17,11 @@ exports.UserController = {
     async getById(req, res) {
         const id_usuario = req.params.id;
         if (typeof id_usuario !== 'string') {
-            throw new AppError_1.AppError('ID do usuario invalido.', 400);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.INVALID_ID, 400);
         }
         const user = await User_1.UserModel.findById(id_usuario);
         if (!user) {
-            throw new AppError_1.AppError('Usuario nao encontrado.', 404);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.NOT_FOUND, 404);
         }
         res.status(200).json({
             user: User_1.UserModel.toPublic(user),
@@ -28,14 +30,14 @@ exports.UserController = {
     async promoteToAdmin(req, res) {
         const id_usuario = req.params.id;
         if (typeof id_usuario !== 'string') {
-            throw new AppError_1.AppError('ID do usuario invalido.', 400);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.INVALID_ID, 400);
         }
         const user = await User_1.UserModel.promoteToAdmin(id_usuario);
         if (!user) {
-            throw new AppError_1.AppError('Usuario nao encontrado.', 404);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.NOT_FOUND, 404);
         }
         res.status(200).json({
-            message: 'Usuario promovido para administrador.',
+            message: success_1.SUCCESS_MESSAGES.USER_PROMOTED,
             user: {
                 id_usuario: user.id_usuario,
                 nome_usuario: user.nome_usuario,
@@ -46,12 +48,12 @@ exports.UserController = {
     async update(req, res) {
         const id_usuario = req.params.id;
         if (typeof id_usuario !== 'string') {
-            throw new AppError_1.AppError('ID do usuario invalido.', 400);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.INVALID_ID, 400);
         }
         const data = validation_1.updateUserSchema.parse(req.body);
         const user = await User_1.UserModel.findById(id_usuario);
         if (!user) {
-            throw new AppError_1.AppError('Usuario nao encontrado.', 404);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.NOT_FOUND, 404);
         }
         if (data.email_usuario &&
             data.email_usuario !==
@@ -60,7 +62,7 @@ exports.UserController = {
             if (emailInUse &&
                 emailInUse.id_usuario !==
                     user.id_usuario) {
-                throw new AppError_1.AppError('Este e-mail ja esta em uso por outro usuario.', 409);
+                throw new AppError_1.AppError(user_1.USER_ERRORS.EMAIL_IN_USE, 409);
             }
         }
         let password_hash;
@@ -81,24 +83,24 @@ exports.UserController = {
             password_hash,
         });
         if (!updated) {
-            throw new AppError_1.AppError('Nao foi possivel atualizar o usuario.', 500);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.UPDATE_FAILED, 500);
         }
         res.status(200).json({
-            message: 'Dados atualizados com sucesso.',
+            message: success_1.SUCCESS_MESSAGES.USER_UPDATED,
             user: User_1.UserModel.toPublic(updated),
         });
     },
     async remove(req, res) {
         const id_usuario = req.params.id;
         if (typeof id_usuario !== 'string') {
-            throw new AppError_1.AppError('ID do usuario invalido.', 400);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.INVALID_ID, 400);
         }
         const deleted = await User_1.UserModel.delete(id_usuario);
         if (!deleted) {
-            throw new AppError_1.AppError('Usuario nao encontrado.', 404);
+            throw new AppError_1.AppError(user_1.USER_ERRORS.DELETE_FAILED, 404);
         }
         res.status(200).json({
-            message: 'Conta removida com sucesso.',
+            message: success_1.SUCCESS_MESSAGES.USER_REMOVED,
         });
     },
 };

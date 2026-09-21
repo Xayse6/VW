@@ -1,11 +1,13 @@
 import 'dotenv/config';
 
+import { SYSTEM_MESSAGES } from '../messages/system';
+
 function requiredEnv(name: string): string {
   const value = process.env[name];
 
   if (!value) {
     throw new Error(
-      `${name} nao configurada. Verifique o arquivo .env.`
+      SYSTEM_MESSAGES.ENV_MISSING(name)
     );
   }
 

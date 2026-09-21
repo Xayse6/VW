@@ -3,6 +3,8 @@ import type {
   Response,
 } from 'express';
 
+import { SUCCESS_MESSAGES } from '../messages/success';
+import { USER_ERRORS } from '../messages/user';
 import { UserModel } from '../model/User';
 import { AppError } from '../utils/AppError';
 
@@ -37,7 +39,7 @@ export const UserController = {
 
     if (typeof id_usuario !== 'string') {
       throw new AppError(
-        'ID do usuario invalido.',
+        USER_ERRORS.INVALID_ID,
         400
       );
     }
@@ -49,7 +51,7 @@ export const UserController = {
 
     if (!user) {
       throw new AppError(
-        'Usuario nao encontrado.',
+        USER_ERRORS.NOT_FOUND,
         404
       );
     }
@@ -68,7 +70,7 @@ export const UserController = {
 
     if (typeof id_usuario !== 'string') {
       throw new AppError(
-        'ID do usuario invalido.',
+        USER_ERRORS.INVALID_ID,
         400
       );
     }
@@ -78,14 +80,14 @@ export const UserController = {
 
     if (!user) {
       throw new AppError(
-        'Usuario nao encontrado.',
+        USER_ERRORS.NOT_FOUND,
         404
       );
     }
 
     res.status(200).json({
       message:
-        'Usuario promovido para administrador.',
+        SUCCESS_MESSAGES.USER_PROMOTED,
       user: {
         id_usuario: user.id_usuario,
         nome_usuario: user.nome_usuario,
@@ -102,7 +104,7 @@ export const UserController = {
 
     if (typeof id_usuario !== 'string') {
       throw new AppError(
-        'ID do usuario invalido.',
+        USER_ERRORS.INVALID_ID,
         400
       );
     }
@@ -119,7 +121,7 @@ export const UserController = {
 
     if (!user) {
       throw new AppError(
-        'Usuario nao encontrado.',
+        USER_ERRORS.NOT_FOUND,
         404
       );
     }
@@ -140,7 +142,7 @@ export const UserController = {
           user.id_usuario
       ) {
         throw new AppError(
-          'Este e-mail ja esta em uso por outro usuario.',
+          USER_ERRORS.EMAIL_IN_USE,
           409
         );
       }
@@ -193,14 +195,14 @@ export const UserController = {
 
     if (!updated) {
       throw new AppError(
-        'Nao foi possivel atualizar o usuario.',
+        USER_ERRORS.UPDATE_FAILED,
         500
       );
     }
 
     res.status(200).json({
       message:
-        'Dados atualizados com sucesso.',
+        SUCCESS_MESSAGES.USER_UPDATED,
 
       user:
         UserModel.toPublic(updated),
@@ -215,7 +217,7 @@ export const UserController = {
 
     if (typeof id_usuario !== 'string') {
       throw new AppError(
-        'ID do usuario invalido.',
+        USER_ERRORS.INVALID_ID,
         400
       );
     }
@@ -227,14 +229,14 @@ export const UserController = {
 
     if (!deleted) {
       throw new AppError(
-        'Usuario nao encontrado.',
+        USER_ERRORS.DELETE_FAILED,
         404
       );
     }
 
     res.status(200).json({
       message:
-        'Conta removida com sucesso.',
+        SUCCESS_MESSAGES.USER_REMOVED,
     });
   },
 };

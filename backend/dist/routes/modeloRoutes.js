@@ -7,9 +7,7 @@ const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
 router.get('/', (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.list));
 router.get('/:id', (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.getById));
-// Suporte para POST padrão REST e legado
-router.post('/', auth_1.requireAuth, (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.register));
-router.post('/cadastroModelo', auth_1.requireAuth, (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.register));
-router.put('/:id', auth_1.requireAuth, (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.update));
-router.delete('/:id', auth_1.requireAuth, (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.remove));
+router.post('/', auth_1.requireAuth, (0, auth_1.requireRole)(['adm']), (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.register));
+router.put('/:id', auth_1.requireAuth, (0, auth_1.requireRole)(['adm']), (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.update));
+router.delete('/:id', auth_1.requireAuth, (0, auth_1.requireRole)(['adm']), (0, errorHandler_1.asyncHandler)(modeloController_1.ModeloController.remove));
 exports.default = router;

@@ -76,7 +76,7 @@ export function useMarcaHooks(id?: string) {
         );
       } else {
         await api.post(
-          "/marcas/cadastroMarca",
+          "/marcas",
           {
             nome_marca: nomeMarca,
           }

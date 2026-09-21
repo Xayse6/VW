@@ -6,6 +6,7 @@ const database_1 = require("./db/database");
 async function startServer() {
     try {
         await (0, database_1.testDatabaseConnection)();
+        await (0, database_1.syncDatabase)();
         const app = (0, app_1.createApp)();
         app.listen(env_1.env.port, () => {
             console.log(`API rodando em http://localhost:${env_1.env.port}`);

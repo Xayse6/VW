@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 const database_1 = require("../db/database");
+const system_1 = require("../messages/system");
 exports.UserModel = {
     async create(params) {
         const insertResult = await database_1.pool.query(`
@@ -25,7 +26,7 @@ exports.UserModel = {
       `, [params.nome_usuario, params.email_usuario, params.password_hash]);
         const user = await this.findById(insertResult.rows[0].id_usuario);
         if (!user) {
-            throw new Error('Falha ao recuperar usuário cadastrado.');
+            throw new Error(system_1.SYSTEM_MESSAGES.USER_CREATE_FAILED);
         }
         return user;
     },

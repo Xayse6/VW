@@ -1,4 +1,5 @@
 import { pool } from '../db/database';
+import { SYSTEM_MESSAGES } from '../messages/system';
 import type { ModeloRecord, PublicModelo } from '../types/modelos';
 
 export const ModeloModel = {
@@ -22,7 +23,7 @@ export const ModeloModel = {
 
     const created = await this.findById(insertResult.rows[0].id_modelo);
     if (!created) {
-      throw new Error('Falha ao recuperar modelo recém-criado.');
+      throw new Error(SYSTEM_MESSAGES.MODELO_CREATE_FAILED);
     }
 
     return created;

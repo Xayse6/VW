@@ -1,5 +1,7 @@
 import { pool } from '../db/database';
 
+import { SYSTEM_MESSAGES } from '../messages/system';
+
 import type {
   PublicUser,
   UserRecord,
@@ -36,7 +38,7 @@ export const UserModel = {
 
     const user = await this.findById(insertResult.rows[0].id_usuario);
     if (!user) {
-      throw new Error('Falha ao recuperar usuário cadastrado.');
+      throw new Error(SYSTEM_MESSAGES.USER_CREATE_FAILED);
     }
 
     return user;
