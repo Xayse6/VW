@@ -76,3 +76,54 @@ export type LoginInput =
 
 export type UpdateUserInput =
   z.infer<typeof updateUserSchema>;
+
+export const createMarcaSchema = z.object({
+  nome_marca: z
+    .string()
+    .trim()
+    .min(2, 'O nome da marca deve ter pelo menos 2 caracteres.')
+    .max(50, 'O nome da marca deve ter no máximo 50 caracteres.'),
+});
+
+export const updateMarcaSchema = z.object({
+  nome_marca: z
+    .string()
+    .trim()
+    .min(2, 'O nome da marca deve ter pelo menos 2 caracteres.')
+    .max(50, 'O nome da marca deve ter no máximo 50 caracteres.'),
+});
+
+export const createModeloSchema = z.object({
+  id_marca: z.string().uuid('ID da marca inválido.'),
+  nome_modelo: z
+    .string()
+    .trim()
+    .min(1, 'O nome do modelo é obrigatório.')
+    .max(50, 'O nome do modelo deve ter no máximo 50 caracteres.'),
+  ano_modelo: z.coerce
+    .number()
+    .int('Ano deve ser um número inteiro.')
+    .min(1900, 'Ano deve ser maior que 1900.')
+    .max(2100, 'Ano inválido.'),
+});
+
+export const updateModeloSchema = z.object({
+  id_marca: z.string().uuid('ID da marca inválido.').optional(),
+  nome_modelo: z
+    .string()
+    .trim()
+    .min(1, 'O nome do modelo é obrigatório.')
+    .max(50, 'O nome do modelo deve ter no máximo 50 caracteres.')
+    .optional(),
+  ano_modelo: z.coerce
+    .number()
+    .int('Ano deve ser um número inteiro.')
+    .min(1900, 'Ano deve ser maior que 1900.')
+    .max(2100, 'Ano inválido.')
+    .optional(),
+});
+
+export type CreateMarcaInput = z.infer<typeof createMarcaSchema>;
+export type UpdateMarcaInput = z.infer<typeof updateMarcaSchema>;
+export type CreateModeloInput = z.infer<typeof createModeloSchema>;
+export type UpdateModeloInput = z.infer<typeof updateModeloSchema>;

@@ -11,109 +11,61 @@ export const UserModel = {
     email_usuario: string;
     password_hash: string;
   }): Promise<UserRecord> {
-    const result =
-      await pool.query<UserRecord>(
-        `
-        INSERT INTO users (
-          nome_usuario,
-          email_usuario,
-          password_hash,
-          id_role
+    const insertResult = await pool.query<{ id_usuario: string }>(
+      `
+      INSERT INTO users (
+        nome_usuario,
+        email_usuario,
+        password_hash,
+        id_role
+      )
+      VALUES (
+        $1,
+        $2,
+        $3,
+        (
+          SELECT id_role
+          FROM roles
+          WHERE nome_role = 'client'
         )
-        VALUES (
-          $1,
-          $2,
-          $3,
-          (
-            SELECT id_role
-            FROM roles
-            WHERE nome_role = 'client'
-          )
-        )
-        RETURNING
-          id_usuario,
-          nome_usuario,
-          email_usuario,
-          password_hash,
-          id_role,
-          created_at_usuario,
-          updated_at_usuario
-        `,
-        [
-          params.nome_usuario,
-          params.email_usuario,
-          params.password_hash,
-        ]
-      );
+      )
+      RETURNING id_usuario
+      `,
+      [params.nome_usuario, params.email_usuario, params.password_hash]
+    );
 
-    return result.rows[0];
-  },
-
-async promoteToAdmin(
-  id_usuario: string
-): Promise<UserRecord | undefined> {
-  const client = await pool.connect();
-
-  try {
-    await client.query('BEGIN');
-
-    // Verifica se o usuário existe
-    const userResult =
-      await client.query<UserRecord>(
-        `
-        SELECT
-          id_usuario,
-          nome_usuario,
-          email_usuario,
-          password_hash,
-          created_at_usuario,
-          updated_at_usuario
-        FROM users
-        WHERE id_usuario = $1
-        `,
-        [id_usuario]
-      );
-
-    if (userResult.rows.length === 0) {
-      await client.query('ROLLBACK');
-      return undefined;
+    const user = await this.findById(insertResult.rows[0].id_usuario);
+    if (!user) {
+      throw new Error('Falha ao recuperar usuário cadastrado.');
     }
 
-    const user = userResult.rows[0];
+    return user;
+  },
 
-    // Remove da tabela clients
-    await client.query(
+  async promoteToAdmin(
+    id_usuario: string
+  ): Promise<UserRecord | undefined> {
+    const result = await pool.query(
       `
-      DELETE FROM clients
+      UPDATE users
+      SET
+        id_role = (
+          SELECT id_role
+          FROM roles
+          WHERE nome_role = 'adm'
+        ),
+        updated_at_usuario = NOW()
       WHERE id_usuario = $1
       `,
       [id_usuario]
     );
 
-    // Adiciona na tabela adm
-    await client.query(
-      `
-      INSERT INTO adm (
-        id_usuario
-      )
-      VALUES ($1)
-      ON CONFLICT (id_usuario) DO NOTHING
-      `,
-      [id_usuario]
-    );
+    if ((result.rowCount ?? 0) === 0) {
+      return undefined;
+    }
 
-    await client.query('COMMIT');
-
-    return user;
-
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-
-  } finally {
-    client.release();
-  }
-},
+    return this.findById(id_usuario);
+  },
 
   async findById(
     id_usuario: string

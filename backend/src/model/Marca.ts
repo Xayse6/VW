@@ -102,6 +102,18 @@ export const MarcaModel = {
   return result.rows[0];
 },
 
+  async delete(id_marca: string): Promise<boolean> {
+    const result = await pool.query(
+      `
+      DELETE FROM marcas
+      WHERE id_marca = $1
+      `,
+      [id_marca]
+    );
+
+    return (result.rowCount ?? 0) > 0;
+  },
+
   toPublic(
     marca: MarcaRecord
   ): PublicMarca{
@@ -110,4 +122,4 @@ export const MarcaModel = {
       nome_marca: marca.nome_marca,
     };
   },
-}
+};

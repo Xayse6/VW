@@ -18,6 +18,9 @@ export const env = {
   databaseUrl: requiredEnv('DATABASE_URL'),
   jwtSecret: requiredEnv('JWT_SECRET'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
-  corsOrigin:
-    process.env.CORS_ORIGIN || 'http://localhost:5173',
+  corsOrigin: process.env.CORS_ORIGIN
+    ? (process.env.CORS_ORIGIN.includes(',')
+        ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
+        : process.env.CORS_ORIGIN)
+    : ['http://localhost:5173', 'http://localhost:80', 'http://localhost'],
 };

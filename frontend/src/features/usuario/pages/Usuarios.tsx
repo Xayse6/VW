@@ -10,7 +10,7 @@ import type { User } from "../../../types";
 type FiltroRole = "todos" | "client" | "adm" | "emp";
 
 export default function Usuarios() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const [usuarios, setUsuarios] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,7 +116,7 @@ export default function Usuarios() {
         </div>
 
         <Link
-          to="/cadastro"
+          to="/register"
           className="btn-novo"
         >
           <i className="fas fa-user-plus"></i>
@@ -212,13 +212,19 @@ export default function Usuarios() {
                       <td>
                         <div className="acoes">
 
-                          <Link
-                            to={`/Usuario/Editar/${usuario.id_usuario}`}
-                            className="btn-editar"
-                          >
-                            <i className="fas fa-edit"></i>
-                            Editar
-                          </Link>
+                          {usuario.id_usuario === user?.id_usuario ? (
+                            <Link
+                              to="/profile/edit"
+                              className="btn-editar"
+                            >
+                              <i className="fas fa-edit"></i>
+                              Editar
+                            </Link>
+                          ) : (
+                            <span className="btn-editar-disabled" title="Somente o próprio usuário pode editar seu perfil">
+                              —
+                            </span>
+                          )}
 
                           <button
                             type="button"

@@ -43,8 +43,19 @@ export function errorHandler(
     'code' in err &&
     err.code === '23505'
   ) {
+    const constraint = 'constraint' in err ? String(err.constraint) : '';
+
+    let message = 'Registro já cadastrado.';
+    if (constraint.includes('email') || constraint.includes('users')) {
+      message = 'E-mail já cadastrado.';
+    } else if (constraint.includes('marca')) {
+      message = 'Já existe uma marca cadastrada com este nome.';
+    } else if (constraint.includes('role')) {
+      message = 'Já existe um perfil com este nome.';
+    }
+
     res.status(409).json({
-      error: 'E-mail ja cadastrado.',
+      error: message,
     });
 
     return;

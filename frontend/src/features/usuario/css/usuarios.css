@@ -42,7 +42,7 @@
   padding: 40px 48px 64px;
   background:
     linear-gradient(rgba(10, 16, 30, 0.68), rgba(10, 16, 30, 0.68)),
-    url("../assets/principal.jpg");
+    url("../../../assets/principal.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

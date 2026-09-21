@@ -1,11 +1,9 @@
 import "../css/home.css";
-
 import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export default function Home() {
-    // Depois você pode substituir isso pelo estado
-    // real de autenticação do usuário.
-    const clienteLogado = false;
+    const { isAuthenticated } = useAuth();
 
     return (
         <main className="home-container">
@@ -22,30 +20,37 @@ export default function Home() {
                         proteção e personalidade.
                     </p>
 
-                    {clienteLogado ? (
-                        <Link
-                            to="/dashboard"
-                            className="home-btn home-btn-primary"
-                        >
-                            Dashboard
-                        </Link>
-                    ) : (
+                    {isAuthenticated ? (
                         <div className="hero-buttons">
-
                             <Link
-                                to="/galeria"
-                                className="home-btn home-btn-outline"
+                                to="/profile"
+                                className="home-btn home-btn-primary"
                             >
-                                Ver Galeria
+                                Meu Perfil
                             </Link>
 
                             <Link
-                                to="/cadastro"
+                                to="/modelos"
+                                className="home-btn home-btn-outline"
+                            >
+                                Ver Modelos
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="hero-buttons">
+                            <Link
+                                to="/login"
+                                className="home-btn home-btn-outline"
+                            >
+                                Entrar
+                            </Link>
+
+                            <Link
+                                to="/register"
                                 className="home-btn home-btn-primary"
                             >
                                 Começar Agora
                             </Link>
-
                         </div>
                     )}
 
@@ -54,7 +59,7 @@ export default function Home() {
             </section>
 
             {/* SERVIÇOS */}
-            <section className="servicos">
+            <section id="servicos" className="servicos">
 
                 <div className="servicos-grid">
 

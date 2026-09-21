@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/hooks/useAuth';
+import logoImg from '../../assets/logo.png';
 
 import './css/navbar.css';
 
@@ -18,7 +19,7 @@ export default function Navbar() {
   }
 
   const isADM = user?.role === 'adm';
-  const isClient = user?.role ==='client';
+  const isClient = user?.role === 'client';
 
   return (
     <nav className="navbar">
@@ -27,7 +28,7 @@ export default function Navbar() {
         <div className="navbar-container-logo">
           <Link className="logo" to="/">
             <img
-              src="/src/assets/logo.png"
+              src={logoImg}
               alt="Velox Wrap"
               className="navbar-logo"
             />
@@ -46,28 +47,19 @@ export default function Navbar() {
               <li>
                 <Link
                   className="item-link"
-                  to="/galeria"
+                  to="/"
                 >
-                  Galeria
+                  Início
                 </Link>
               </li>
 
               <li>
-                <Link
+                <a
                   className="item-link"
-                  to="/servicos"
+                  href="/#servicos"
                 >
                   Serviços
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  className="item-link"
-                  to="/contato"
-                >
-                  Contato
-                </Link>
+                </a>
               </li>
 
             </div>
@@ -76,15 +68,6 @@ export default function Navbar() {
 
               {isAuthenticated ? (
                 <>
-                  <li>
-                    <Link
-                      className="user-link"
-                      to="/"
-                    >
-                      Inicio
-                    </Link>
-                  </li>
-
                   {/* SOMENTE ADMIN */}
                   {isADM && (
                     <>
@@ -93,7 +76,7 @@ export default function Navbar() {
                           className="user-link"
                           to="/usuarios"
                         >
-                          Usuarios
+                          Usuários
                         </Link>
                       </li>
 
@@ -117,26 +100,17 @@ export default function Navbar() {
                     </>
                   )}
 
-                  {/* CLIENT E ADMIN */}
+                  {/* CLIENT */}
                   {isClient && (
                     <>
-                    <li>  
-                      <Link
-                        className="user-link"
-                        to="/veiculos"
-                      >
-                        Veiculos
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link
-                        className="user-link"
-                        to="/agendamentos"
-                      >
-                        Agendamentos
-                      </Link>
-                    </li>
+                      <li>
+                        <Link
+                          className="user-link"
+                          to="/modelos"
+                        >
+                          Modelos
+                        </Link>
+                      </li>
                     </>
                   )}
 

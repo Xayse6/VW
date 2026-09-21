@@ -40,6 +40,7 @@ export function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/cadastro" element={<Register />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/usuarios" element={<Usuarios />}/>

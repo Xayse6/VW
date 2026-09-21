@@ -22,9 +22,9 @@ import type {
 import { AuthContext } from './AuthContext';
 
 /**
- * Provider responsavel por manter o estado de autenticacao da aplicacao,
- * incluindo o usuario logado e as operacoes de login, cadastro e logout.
- * Ao carregar, tenta restaurar a sessao a partir do token salvo localmente.
+ * Provider responsável por manter o estado de autenticação da aplicação,
+ * incluindo o usuário logado e as operações de login, cadastro e logout.
+ * Ao carregar, tenta restaurar a sessão a partir do token salvo localmente.
  */
 export function AuthProvider({
   children,
@@ -32,12 +32,13 @@ export function AuthProvider({
   children: ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => Boolean(getStoredToken()));
 
   const loadCurrentUser = useCallback(async () => {
     const token = getStoredToken();
 
     if (!token) {
+      setUser(null);
       setIsLoading(false);
       return;
     }
@@ -53,28 +54,37 @@ export function AuthProvider({
     }
   }, []);
 
-useEffect(() => {
-  const loadCurrentUser = async () => {
+  useEffect(() => {
     const token = getStoredToken();
-
     if (!token) {
-      setIsLoading(false);
       return;
     }
 
-    try {
-      const currentUser = await authService.getCurrentUser();
-      setUser(currentUser);
-    } catch {
-      clearStoredToken();
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    let isMounted = true;
 
-  void loadCurrentUser();
-}, []);
+    void authService
+      .getCurrentUser()
+      .then((currentUser) => {
+        if (isMounted) {
+          setUser(currentUser);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          clearStoredToken();
+          setUser(null);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const login = useCallback(async (payload: LoginPayload) => {
     const response = await authService.login(payload);

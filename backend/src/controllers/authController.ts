@@ -154,15 +154,14 @@ export const AuthController = {
       },
     });
   },
-async all(
-  _req: Request,
-  res: Response
-): Promise<void> {
-  const users = await UserModel.findAll();
+  async all(
+    _req: Request,
+    res: Response
+  ): Promise<void> {
+    const users = await UserModel.findAll();
 
-  console.log(users);
-
-  res.status(200).json({ users });
-},
-  
+    res.status(200).json({
+      users: users.map(UserModel.toPublic),
+    });
+  },
 };
